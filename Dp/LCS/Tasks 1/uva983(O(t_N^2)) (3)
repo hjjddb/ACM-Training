@@ -1,0 +1,71 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+const int N = 107;
+int t, n;
+int a[N][N], dp[N][N];
+int ar[N];
+int ans;
+
+int kanadeMax(){
+    int tmpRes = 0, resMax = INT_MIN;
+    for(int i = 1; i <= n; i++){
+        tmpRes += ar[i];
+        resMax = max(resMax, tmpRes);
+        tmpRes = max(tmpRes, 0);
+    }
+    return resMax;
+}
+
+int kanadeMin(){
+    int tmpRes = 0, resMin = INT_MAX;
+    for(int i = 1; i <= n; i++){
+        tmpRes += ar[i];
+        resMin = min(resMin, tmpRes);
+        tmpRes = min(tmpRes, 0);
+    }  
+    return resMin;
+}
+
+void optimize(){
+    int sum = 0;
+    for(int i = 1; i <= n; i++)
+        sum += ar[i];
+    int tmp = sum - kanadeMin();
+    if (tmp != 0)
+        ans = max(ans, tmp);
+    ans = max(ans, kanadeMax());
+}
+
+int main(){
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
+    scanf("%d", &t);
+    while(t--){
+        ans = INT_MIN;
+        scanf("%d", &n);
+        for(int i = 0; i <= n; i++){
+            dp[i][0] = 0;
+            dp[0][i] = 0;
+        }
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= n; j++){
+                scanf("%d", &a[i][j]);
+                dp[i][j] = dp[i - 1][j] + a[i][j];
+            }
+        }
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= n; j++){
+                if (i <= j)
+                    for(int k = 1; k <= n; k++)
+                        ar[k] = dp[j][k] - dp[i - 1][k];                
+                else
+                    for(int k = 1; k <= n; k++)
+                        ar[k] = dp[n][k] - dp[i - 1][k] + dp[j][k];    
+                optimize();
+            }
+        }
+        printf("%d\n", ans);
+    }
+}

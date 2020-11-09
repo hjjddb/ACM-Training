@@ -1,0 +1,8 @@
+Công ty HNP tổ chức một cuộc thi vẽ tranh cho thiếu nhi toàn thế giới. Có n bức tranh, bức tranh thứ i có chủ đề a[i]. Đếm số lượng chủ đề.
+INPUT:
+	Dòng 1: số nguyên dương n
+	Dòng 2: n số nguyên dương a[1], ..., a[n]
+OUTPUT:
+	Số lượng chủ đề
+Giới hạn:
+	n <= 10^6

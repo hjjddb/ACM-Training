@@ -1,0 +1,12 @@
+Thành phố có một vườn bách thảo mô tả dưới dạng bản đồ hình chữ nhật gồm m dòng n cột. Trong vườn có k loại cây đánh số từ 1 đến k. Mỗi ô của bản đồ chứa duy nhất 1 số nguyên dương i nếu tại ô này trồng cây loại i, hoặc 0 nếu không có cây.
+Chính quyền muốn chỉnh trang khu vườn bằng cách giữ lại những hàng cây có ít nhất t cây cùng loại liền nhau, thuộc cùng một loại cây, trên cùng dòng hoặc cùng cột. Những cây không thuộc hàng cây đó sẽ được chuyển đi nơi khác.
+Yêu cầu: Đếm số lượng cây cần di chuyển
+INPUT:
+	Dòng 1: 2 số nguyên dương m, n
+	m dòng tiếp theo: ma trận mxn biểu diễn vườn cây
+OUTPUT: 
+	1 dòng duy nhất là số lượng cây cần di chuyển
+
+Giới hạn: 
+	40% với m, n, t <= 100
+	60% với m, n, t <= 1000

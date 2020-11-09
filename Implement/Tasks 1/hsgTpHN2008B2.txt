@@ -1,0 +1,7 @@
+Nhập vào bàn phím số nguyên dương N và N số nguyên A[1]….A[N] có giá trị tuyệt đối không vượt quá 1000.
+Xuất ra màn hình cá kết quả sau đây:
++ Dòng 1: In ra N số nguyên B[1]….B[N], trong đó  B[i] là số lớn nhất trong các số A[1]….A[i], với 1< i < N.
++ Dòng 2: In ra giá trị S nhỏ nhất trong tất cả các giá trị tuyệt đối của tổng hai số hạng bất kỳ của dãy đã cho.
++ Dòng 3: In ra giá trị T lớn nhất trong tất cả cá giá trị tuyệt đối của tổng một số số hạng nào đó của dãy đã cho.
+Giới hạn:
+	N <= 10^5

@@ -1,0 +1,2 @@
+Cho ma trận vuông A(nxn) với n <= 100, các phần tử a[i][j] có giá trị nguyên dương (a[i][j] <= 100).
+Sắp xếp ma trận theo thứ tự giảm dần từ phải sang trái, từ trên xuống dưới
