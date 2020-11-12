@@ -29,33 +29,54 @@ using namespace __gnu_pbds;
 const int d4x[] = {-1, 0, 1, 0},
           d4y[] = {0, -1, 0, 1},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
-          N = 2e5+1;
-int n, m, cnt, low[N], num[N], numChild[N];
-bool isArt[N];
-vt<vt<int>> G;
-vt<ii> bridges;
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+const ll oo = LLONG_MAX;
+int n, m, cnt;
+vt<vt<ii>> G; // G is a DAG
+vt<bool> vs;
+vt<int> topo;
+vt<ll> d;
 
-void dfs(int u, int p){
-    low[u] = num[u] = ++cnt;
-    EACH(v, G[u]){
-        if (!num[v]){
-            ++numChild[u];
-            dfs(v, u);
-            low[u] = min(low[u], low[v]);
-        } else {
-            if (v != p){
-                low[u] = min(low[u], num[v]);
-            }
-        }
-        if (low[u]==num[u]){
-            if (numChild[u]>1) isArt[u]=true;
-        }
-        if (num[u]<low[v]){
-            bridges.pb({u, v});
-            isArt[u]=true;
+void dfs(int u){
+    vs[u]=true;
+    // cout << u << '\n';
+    EACH(e, G[u]){
+        int w(e.fi), v(e.se);
+        if (!vs[v]){
+            dfs(v);
         }
     }
+    topo[--cnt]=u;
+}
+
+void topoSort(){
+    topo = vt<int>(n, 0);
+    cnt = n;
+    vs = vt<bool>(n+1, false);
+    FOR(i, 1, n+1){
+        if (!vs[i]) dfs(i);
+    } 
+}
+
+ll shortestPathDAG(vt<vt<ii>> G){
+    vt<ll> d(n+1, oo);
+    d[1] = 0LL;
+    EACH(u, topo){
+        EACH(e, G[u]){
+            int w(e.fi), v(e.se);
+            d[v] = min(d[v], d[u]+w);
+        }
+    }
+    return d[n];
+}
+
+ll longestPathDAG(vt<vt<ii>> G){
+    vt<vt<ii>> G_ = G;
+    FOR(i, 1, n+1){
+        EACH(e, G_[i])
+            e.fi*=-1;
+    }
+    return -1*shortestPathDAG(G_);
 }
 
 int main(){
@@ -66,15 +87,13 @@ int main(){
     // freopen("test.out", "w", stdout);
 
     cin >> n >> m;
-    G = vt<vt<int>>(n+1);
+    G = vt<vt<ii>>(n+1);
+    vs = vt<bool>(n+1, false);
     FOR(m){
-        int u, v;
-        cin >> u >> v;
-        G[u].pb(v);
-        // G[v].pb(u); // if undirected
+        int u, v, w;
+        cin >> u >> v >> w;
+        G[u].pb(ii(w, v));
     }
-    FOR(i, 1, n+1) if (!num[i]) dfs(i, -1);
-    FOR(i, 1, n+1) cout << i << " " << num[i] << " " << low[i] << '\n';
-    EACH(b, bridges) cout << b.fi << " " << b.se << '\n';
-    FOR(i,1 , n+1) if (isArt[i]) cout << i << '\n';
+    topoSort();
+    cout << shortestPathDAG(G) << " " << longestPathDAG(G);
 }
