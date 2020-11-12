@@ -1,10 +1,10 @@
 #include<bits/stdc++.h>
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
- 
+
 using namespace std;
 using namespace __gnu_pbds;
- 
+
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
@@ -25,32 +25,76 @@ using namespace __gnu_pbds;
 #define F_ORC(...) GET5(__VA_ARGS__, F_OR4, F_OR3, F_OR2, F_OR1)
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
- 
+
 const int d4x[] = {-1, 0, 1, 0},
           d4y[] = {0, -1, 0, 1},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1}, 
-          N = 2e3+1;
-int n, a[N];
- 
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
+          N = 2e5+1;
+int n, a[N], p[N];
+int node[4*N], lazy[4*N];
+
+void build(int id, int l, int r){
+    if (l==r){
+        node[id]=0;
+        return;
+    }
+    int m((l+r)/2);
+    build(2*id, l, m);
+    build(2*id+1, m+1, r);
+}
+
+void downtree(int id){
+    int t = lazy[id];
+    node[2*id]+=t;
+    node[2*id+1]+=t;
+    lazy[2*id]+=t;
+    lazy[2*id+1]+=t;
+    lazy[id]=0;
+    return;
+}
+
+void update(int id, int l, int r, int u){
+    if (r<u) return;
+    if (l>=u){
+        ++node[id];
+        ++lazy[id];
+        return;
+    }
+    downtree(id);
+    int m((l+r)/2);
+    update(2*id, l, m, u);
+    update(2*id+1, m+1, r, u);
+    node[id]=max(node[2*id], node[2*id+1]);
+}
+
+int get(int id, int l, int r, int u){
+    if (r<u||l>u) return 0;
+    if (l==u&&u==r) return node[id];
+    downtree(id);
+    int m((l+r)/2);
+    return get(2*id, l, m, u)+get(2*id+1, m+1, r, u);
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
- 
+
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
- 
+
     cin >> n;
-    FOR(i, 1, n+1) cin >> a[i];
-    vt<iii> v;
-    FOR(i, n, 0, -1){
-        // cout << a[i] << '\n';
-        int x = a[i]%(n+1);
-        v.pb(make_pair(1, ii(i, n+1+i-x)));
-        // cout << "1 " << i << " " << n+1+i-x << '\n';
-        FOR(j, 1, i+1) a[j]+=n+1+i-x;
+    FOR(n) cin >> a[i+1];
+    FOR(n) cin >> p[i+1];
+
+    build(1, 1, n);
+    FOR(i, 1, n+1){
+        int pos(p[i]+get(1, 1, n, p[i])), tpos(p[i]+get(1, 1, n, pos));
+        while(pos != tpos){
+            pos=tpos;
+            tpos=p[i]+get(1, 1, n, pos);
+        }
+        update(1, 1, n, tpos);
+        cout << a[tpos] << " ";
     }
-    cout << v.size()+1 << '\n';
-    EACH(x, v) cout << x.fi << " " << x.se.fi << " " << x.se.se << '\n';
-    cout << "2 " << n << " " << n+1 << '\n'; 
 }

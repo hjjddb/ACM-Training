@@ -15,6 +15,7 @@ using namespace __gnu_pbds;
 #define iii pair<int, ii>
 #define fi first
 #define se second
+#define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
 #define F_OR(i, a, b, s) for (int i=(a); (s)>0? i<(b) : i>(b); i+=(s))
 #define F_OR1(n) F_OR(i, 0, n, 1)
 #define F_OR2(i, e) F_OR(i, 0, e, 1)
@@ -25,9 +26,14 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-const int N = 1e3+1;
-int n, a[N][N], dp[N][N], m;
-char x;
+const int d4x[] = {-1, 0, 1, 0},
+          d4y[] = {0, -1, 0, 1},
+          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
+          N = 2e5+1;
+int n, s, a[N];
+ll d[N];
+
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -36,17 +42,14 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    cin >> n >> m;
-    FOR(i, 1, n+1){
-        FOR(j, 1, n+1){
-            cin >> x;
-            if (x=='*') a[i][j] = 1;
-            dp[i][j] = dp[i-1][j]+dp[i][j-1]-dp[i-1][j-1]+a[i][j];
-        }
-    }
-    while(m--){
-        int z[4];
-        FOR(4) cin >> z[i];
-        cout << dp[z[2]][z[3]] - dp[z[2]][z[1]-1] - dp[z[0]-1][z[3]] + dp[z[0]-1][z[1]-1] << '\n';
-    }
+	cin >> n >> s;
+	FOR(n) cin >> a[i+1];
+	a[0] = 0, a[n+1] = 1e9+1;
+	sort(a+1, a+n+1);
+    int m = (n+1)/2, p;
+    if (s>=a[m]) p = lower_bound(a+1, a+n+1, s, less_equal<int>())-a-1;
+    else p = lower_bound(a+1, a+n+1, s, less<int>())-a; 
+    ll ans(0);
+    FOR(i, min(p, m), max(p, m)+1) ans += 1LL*abs(s-a[i]);
+    cout << ans;
 }

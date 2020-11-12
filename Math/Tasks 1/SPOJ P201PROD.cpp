@@ -1,5 +1,7 @@
 #include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
+
 using namespace std;
 using namespace __gnu_pbds;
 
@@ -33,7 +35,16 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
+    int t;
+    cin >> t;
+    while(t--){
+        int n; cin >> n;
+        int k = ceil(double(n)/4);
+        FOR(n-k) cout << 9;
+        FOR(k) cout << 8;
+        cout << '\n';
+    }
 }

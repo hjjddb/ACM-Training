@@ -15,6 +15,7 @@ using namespace __gnu_pbds;
 #define iii pair<int, ii>
 #define fi first
 #define se second
+#define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
 #define F_OR(i, a, b, s) for (int i=(a); (s)>0? i<(b) : i>(b); i+=(s))
 #define F_OR1(n) F_OR(i, 0, n, 1)
 #define F_OR2(i, e) F_OR(i, 0, e, 1)
@@ -25,39 +26,23 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-const int N = 2e5+1;
-int n, q, a[N], node[4*N];
-
-void build(int id, int l, int r){
-    if (l == r){
-        node[id] = a[l];
-        return;
-    }
-    int m=(l+r)/2;
-    build(2*id, l, m);
-    build(2*id+1, m+1, r);
-    node[id] = min(node[2*id], node[2*id+1]);
-}
-
-int query(int id, int l, int r, int u, int v){
-    if (u>r || v<l) return INT_MAX;
-    if (u<=l && v>=r) return node[id];
-    int m=(l+r)/2;
-    return min(query(2*id, l, m, u, v), query(2*id+1, m+1, r, u, v));
-}
+const int d4x[] = {-1, 0, 1, 0},
+		  d4y[] = {0, -1, 0, 1},
+		  d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+		  d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+int n;
+int f[100];
 
 int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
+	ios_base::sync_with_stdio(false);
+	cin.tie(0);
 
-    // freopen("test.inp", "r", stdin);
-    // freopen("test.out", "w", stdout);
+	// freopen("test.inp", "r", stdin);
+	// freopen("test.out", "w", stdout);
 
-    cin >> n >> q;
-    FOR(i, 1, n+1) cin >> a[i];
-    build(1, 1, n);
-    while(q--){
-        int l, r; cin >> l >> r;
-        cout << query(1, 1, n, l, r) << '\n';
-    }
+	cin >> n;
+	f[0] = 0;
+	f[1] = 1;
+	FOR(i, 2, n+1) f[i] = f[i-1] + f[i-2];
+	cout << f[n];
 }

@@ -15,6 +15,7 @@ using namespace __gnu_pbds;
 #define iii pair<int, ii>
 #define fi first
 #define se second
+#define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
 #define F_OR(i, a, b, s) for (int i=(a); (s)>0? i<(b) : i>(b); i+=(s))
 #define F_OR1(n) F_OR(i, 0, n, 1)
 #define F_OR2(i, e) F_OR(i, 0, e, 1)
@@ -25,9 +26,12 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-const int N = 2e5+1;
-int n, q;
-ll a[N], d[N];
+const int d4x[] = {-1, 0, 1, 0},
+          d4y[] = {0, -1, 0, 1},
+          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+int t;
+ll x;
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -36,12 +40,10 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    cin >> n >> q;
-    FOR(i, 1, n+1)
-        cin >> a[i], d[i]=d[i-1]+a[i];
-    while(q--){
-        int l, r;
-        cin >> l >> r;
-        cout << d[r] - d[l-1] << "\n";
+    cin >> t;
+    while(t--){
+        cin >> x;
+        if (0<x%14 && x%14<=6 && 14<x) cout << "YES\n";
+        else cout << "NO\n";
     }
 }

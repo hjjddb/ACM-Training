@@ -29,9 +29,11 @@ void testGen(){
     srand(time(NULL));
     freopen("test.inp", "w", stdout);
     cout << "1\n";
-    int n = rand() % 20+1;
-    cout << n << '\n';
-    FOR(n) cout << rand()%2;
+    int n = rand() % 10+1;
+    if (n%2==0) ++n;
+    cout << n << " ";
+    cout << rand() % 20 << '\n';
+    FOR(n) cout << rand()%30 << " ";
 }
 
 int main(){

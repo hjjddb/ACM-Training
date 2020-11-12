@@ -30,21 +30,16 @@ const int d4x[] = {-1, 0, 1, 0},
 		  d4y[] = {0, -1, 0, 1},
 		  d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
 		  d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
-		  MOD = 998244353,
-		  N = 3e5+1;
-int n, a[N];
-ll fac[N];
+		  d6x[] = {-1, 0, 1, 0, 0, 0},
+		  d6y[] = {0, -1, 0, 1, 0, 0},
+		  d6z[] = {0, 0, 0, 0, -1, 1},
+		  N = 30, 
+		  oo = 1e5;
+int l, r, c;
+int ex, ey, ez;
 
-ll powM(ll x, ll y){
-	if (!y) return 1;
-	if (y==1) return x;
-	ll half=powM(x, y/2);
-	if (y%2) return half*half%MOD*x%MOD;
-	return half*half%MOD;
-}
-
-ll c(ll x, ll y){
-	return fac[y]*powM(fac[x]*fac[y-x]%MOD, MOD-2)%MOD;
+bool valid(int x, int y, int z){
+	return 0<=x&&x<l&&0<=y&&y<r&&0<=z&&z<c;
 }
 
 int main(){
@@ -53,15 +48,42 @@ int main(){
 
 	// freopen("test.inp", "r", stdin);
 	// freopen("test.out", "w", stdout);
+	
+	while(cin >> l >> r >> c){
+		// cout << l << r << c << '\n';
+		if (l||r||c){
+			queue<ar<int, 3>> q;
+        	vt<vt<vt<int>>> d(l);
+			EACH(i, d) 
+				i.resize(r, vector<int>(c, oo));
+			FOR(l){
+				FOR(j, r){
+					FOR(k, c){
+						char x; cin >> x;
+						if (x=='#') d[i][j][k] = -1;
+						if (x=='S') d[i][j][k] = 0, q.push({i, j, k});
+						if (x=='E') ex=i, ey=j, ez=k;
+					}
+				}
+			}
+			while(q.size()){
+				ar<int, 3> u = q.front();
+				q.pop();
+				int x(u[0]), y(u[1]), z(u[2]);
+				FOR(6){
+					int nx(x+d6x[i]), ny(y+d6y[i]), nz(z+d6z[i]);
+					if (valid(nx, ny, nz)){
+						if (d[nx][ny][nz]==oo){
+							d[nx][ny][nz] = d[x][y][z]+1;
+							q.push({nx, ny, nz});
+						}
+					}
+				}
+			}
+			if (d[ex][ey][ez]!=oo) cout << "Escaped in " << d[ex][ey][ez] << " minute(s).\n";
+			else 
+				cout << "Trapped!";
+		} else return 0;
 
-	cin >> n;
-	FOR(2*n) cin >> a[i+1];
-	sort(a+1, a+2*n+1);
-	fac[0]=1;
-	FOR(i, 1, N) fac[i]=fac[i-1]*i%MOD;
-	ll ans(0);
-	FOR(i, 1, n+1) ans = (ans-a[i])%MOD;
-	FOR(i, n+1, 2*n+1) ans = (ans+a[i])%MOD;
-
-	cout << ans*c(n-1, 2*n-1)*2%MOD;
+	}
 }

@@ -15,6 +15,7 @@ using namespace __gnu_pbds;
 #define iii pair<int, ii>
 #define fi first
 #define se second
+#define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
 #define F_OR(i, a, b, s) for (int i=(a); (s)>0? i<(b) : i>(b); i+=(s))
 #define F_OR1(n) F_OR(i, 0, n, 1)
 #define F_OR2(i, e) F_OR(i, 0, e, 1)
@@ -25,39 +26,12 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-const int N = 2e5+1;
-int n, a[N], q, t, u, v;
-ll node[4*N];
-
-void build(int id, int l, int r){
-    if (l==r){
-        node[id] = a[l];
-        return;
-    } 
-    int m=(l+r)/2;
-    build(2*id, l, m);
-    build(2*id+1, m+1, r);
-    node[id] = node[2*id]+node[2*id+1];
-}
-
-void update(int id, int l, int r, int x, int y){
-    if (l>x || r<x) return;
-    if (l==x && x==r){
-        node[id] = y;
-        return;
-    }
-    int m=(l+r)/2;
-    update(2*id, l, m, x, y);
-    update(2*id+1, m+1, r, x, y);
-    node[id] = node[2*id]+node[2*id+1];
-}
-
-ll get(int id, int l, int r, int x, int y){
-    if (l>y || r<x) return 0;
-    if (l>=x && r<=y) return node[id];
-    int m=(l+r)/2;
-    return get(2*id, l, m, x, y)+get(2*id+1, m+1, r, x, y);
-}
+const int d4x[] = {-1, 0, 1, 0},
+          d4y[] = {0, -1, 0, 1},
+          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+int t;
+ll A, B;
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -66,12 +40,11 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    cin >> n >> q;
-    FOR(n) cin >> a[i+1];
-    build(1, 1, n);
-    while(q--){
-        cin >> t >> u >> v;
-        if (t==1) update(1, 1, n, u, v);
-        else cout << get(1, 1, n, u, v) << "\n";
+    cin >> t;
+    while(t--){
+        cin >> A >> B;
+        int k(0), c(1);
+        while(c<=B) ++k, c*=10;
+        cout << 1LL*A*(k-1) << '\n';
     }
 }
