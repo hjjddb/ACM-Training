@@ -30,32 +30,26 @@ const int d4x[] = {-1, 0, 1, 0},
           d4y[] = {0, -1, 0, 1},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
           d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
-          N = 2e5+1;
-int n, m, cnt, low[N], num[N], numChild[N];
-bool isArt[N];
-vt<vt<int>> G;
-vt<ii> bridges;
+          MOD = 1e9+7;
 
-void dfs(int u, int p){
-    low[u] = num[u] = ++cnt;
-    EACH(v, G[u]){
-        if (!num[v]){
-            ++numChild[u];
-            dfs(v, u);
-            low[u] = min(low[u], low[v]);
-        } else {
-            if (v != p){
-                low[u] = min(low[u], num[v]);
-            }
-        }
-        if (low[u]==num[u]){
-            if (numChild[u]>1) isArt[u]=true;
-        }
-        if (num[u]<low[v]){
-            bridges.pb({u, v});
-            isArt[u]=true;
-        }
-    }
+#define Mat vt<vt<ll>>
+Mat E;
+
+Mat operator * (const Mat &x, const Mat &y){
+    Mat res(x.size(), vt<ll>(y[0].size()));
+    FOR(res.size())
+        FOR(j, res[0].size())
+            FOR(k, x[0].size())
+                res[i][j]=(res[i][j]+x[i][k]*y[k][j])%MOD;
+    return res;
+}
+
+Mat powM(Mat x, ll k){
+    if (!k) return E;
+    if (k==1) return x;
+    Mat half = powM(x, k/2);
+    if (k&1) return half*half*x;
+    return half*half;
 }
 
 int main(){
@@ -65,16 +59,26 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    cin >> n >> m;
-    G = vt<vt<int>>(n+1);
-    FOR(m){
-        int u, v;
-        cin >> u >> v;
-        G[u].pb(v);
-        // G[v].pb(u); // if undirected
+    ll n;
+    cin >> n;
+    
+    E = Mat(6, vt<ll>(6));
+    FOR(6) E[i][i]=1;
+    vt<ll> dp(13);
+    dp[0]=1;
+    FOR(i, 1, 13)
+        FOR(j, 1, min(6, i)+1)
+            dp[i]=(dp[i]+dp[i-j])%MOD;
+    if (n<6){
+        cout << dp[n];
+        return 0;
     }
-    FOR(i, 1, n+1) if (!num[i]) dfs(i, -1);
-    FOR(i, 1, n+1) cout << i << " " << num[i] << " " << low[i] << '\n';
-    EACH(b, bridges) cout << b.fi << " " << b.se << '\n';
-    FOR(i,1 , n+1) if (isArt[i]) cout << i << '\n';
+    Mat f = Mat(6, vt<ll>(6));
+    FOR(i, 5) f[i][i+1]=1;
+    FOR(j, 6) f[5][j]=1;
+    Mat pf = powM(f, n-6);
+    Mat x = Mat(6, vt<ll>(1));
+    FOR(6) x[i][0] = dp[i+1];
+    Mat res = pf*x;
+    cout << (pf*x)[5][0];
 }

@@ -29,17 +29,13 @@ using namespace __gnu_pbds;
 const int d4x[] = {-1, 0, 1, 0},
 		  d4y[] = {0, -1, 0, 1},
 		  d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-		  d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
-		  d6x[] = {-1, 0, 1, 0, 0, 0},
-		  d6y[] = {0, -1, 0, 1, 0, 0},
-		  d6z[] = {0, 0, 0, 0, -1, 1},
-		  N = 30, 
-		  oo = 1e5;
-int l, r, c;
-int ex, ey, ez;
+		  d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+	
+double dp[8][8][8][8][101];
+vt<ii> G[8][8];
 
-bool valid(int x, int y, int z){
-	return 0<=x&&x<l&&0<=y&&y<r&&0<=z&&z<c;
+bool inside(int x, int y){
+	return 0<=x&&x<8&&0<=y&&y<8;
 }
 
 int main(){
@@ -49,41 +45,34 @@ int main(){
 	// freopen("test.inp", "r", stdin);
 	// freopen("test.out", "w", stdout);
 	
-	while(cin >> l >> r >> c){
-		// cout << l << r << c << '\n';
-		if (l||r||c){
-			queue<ar<int, 3>> q;
-        	vt<vt<vt<int>>> d(l);
-			EACH(i, d) 
-				i.resize(r, vector<int>(c, oo));
-			FOR(l){
-				FOR(j, r){
-					FOR(k, c){
-						char x; cin >> x;
-						if (x=='#') d[i][j][k] = -1;
-						if (x=='S') d[i][j][k] = 0, q.push({i, j, k});
-						if (x=='E') ex=i, ey=j, ez=k;
-					}
+	int t;
+	cin >> t;
+	FOR(8)
+		FOR(j, 8){
+			dp[i][j][i][j][0] = 1;
+			FOR(k, 4){
+				int ni(i+d4x[k]), nj(j+d4y[k]);
+				if (inside(ni, nj)) G[i][j].pb({ni, nj});
+			}
+		}
+	
+	FOR(8) FOR(j, 8) FOR(n, 1, t+1) FOR(k, 8) FOR(l, 8)
+		EACH(v, G[k][l]){
+			int nk(v.fi), nl(v.se);
+			dp[i][j][k][l][n] += dp[i][j][nk][nl][n-1]/G[nk][nl].size();
+		}
+			
+	double ans(0);
+	FOR(8)
+		FOR(j, 8){
+			double tmp(1);
+			FOR(k, 8){
+				FOR(l, 8){
+					tmp *= 1-dp[k][l][i][j][t];
 				}
 			}
-			while(q.size()){
-				ar<int, 3> u = q.front();
-				q.pop();
-				int x(u[0]), y(u[1]), z(u[2]);
-				FOR(6){
-					int nx(x+d6x[i]), ny(y+d6y[i]), nz(z+d6z[i]);
-					if (valid(nx, ny, nz)){
-						if (d[nx][ny][nz]==oo){
-							d[nx][ny][nz] = d[x][y][z]+1;
-							q.push({nx, ny, nz});
-						}
-					}
-				}
-			}
-			if (d[ex][ey][ez]!=oo) cout << "Escaped in " << d[ex][ey][ez] << " minute(s).\n";
-			else 
-				cout << "Trapped!";
-		} else return 0;
-
-	}
+			ans += tmp;
+		}
+	
+	cout << setprecision(6) << fixed << ans;
 }

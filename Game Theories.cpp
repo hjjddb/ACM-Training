@@ -1,5 +1,3 @@
-// C:/Users/longz/Desktop/Competitive/Hamic%20Free%20Contest/HUS%20TST/2020.pdf
-
 #include<bits/stdc++.h>
 #include<ext/pb_ds/assoc_container.hpp>
 #include<ext/pb_ds/tree_policy.hpp>
@@ -31,7 +29,11 @@ using namespace __gnu_pbds;
 const int d4x[] = {-1, 0, 1, 0},
           d4y[] = {0, -1, 0, 1},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
+          N = 1e6+1;
+const char ans[] = {'L', 'W'};
+int n, k, p[100];
+bool dp[N];
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -40,15 +42,13 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    int n;
-    cin >> n;
-    vt<int> v;
-    for(int i=1; i*i<=n; ++i){
-        if (n%i==0){
-            v.pb(i);
-            if (i*i!=n) v.pb(n/i);
-        }
+    cin >> n >> k;
+    FOR(k) cin >> p[i];
+    sort(p, p+k);
+    dp[0]=0;
+    FOR(i, 1, n+1){
+        dp[i]=0;
+        for(int j=0; j<k&&p[j]<=i; ++j) dp[i] |= 1-dp[i-p[j]];
     }
-    sort(all(v));
-    EACH(x, v) cout << x << " ";
+    FOR(i, 1, n+1) cout << ans[dp[i]];
 }

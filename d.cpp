@@ -1,5 +1,7 @@
 #include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
+
 using namespace std;
 using namespace __gnu_pbds;
 
@@ -27,13 +29,20 @@ using namespace __gnu_pbds;
 const int d4x[] = {-1, 0, 1, 0},
           d4y[] = {0, -1, 0, 1},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
+          MOD = 1e9+7;
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
+    int n;
+    cin >> n;
+    ll dp[n+1];
+    dp[0]=1, dp[1]=0;
+    FOR(i, 2, n+1) dp[i]=(i-1)*(dp[i-1]+dp[i-2])%MOD;
+    cout << dp[n];
 }
