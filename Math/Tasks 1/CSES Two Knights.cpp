@@ -15,6 +15,7 @@ using namespace __gnu_pbds;
 #define iii pair<int, ii>
 #define fi first
 #define se second
+#define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
 #define F_OR(i, a, b, s) for (int i=(a); (s)>0? i<(b) : i>(b); i+=(s))
 #define F_OR1(n) F_OR(i, 0, n, 1)
 #define F_OR2(i, e) F_OR(i, 0, e, 1)
@@ -25,17 +26,29 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-void testGen(){
-    srand(time(NULL));
-    freopen("test.inp", "w", stdout);
-    int n = rand() % 20+10;
-    cout << n << '\n';
-    FOR(n) cout << rand()%5+1 << " ";
-}
+const int d4x[] = {-1, 0, 1, 0},
+          d4y[] = {0, -1, 0, 1},
+          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
+          N=1e5+1;
+ll res[N];
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    testGen();
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
+
+    res[1]=0;
+    res[2]=6;
+    res[3]=28;
+    res[4]=96;
+    FOR(i, 5, N){
+        ll total = 1LL*i*i*(i*i-1)/2;
+        res[i] =  total - (4*(2+2*3+4+(i-4)*4+(i-4)*6) + 8*(i-4)*(i-4))/2;
+    }
+
+    int n; cin >> n;
+    FOR(i, 1, n+1) cout << res[i] << "\n";
 }

@@ -13,8 +13,14 @@ using namespace __gnu_pbds;
 #define ld long double
 #define ii pair<int, int>
 #define iii pair<int, ii>
+#define vi vt<int>
+#define vl vt<ll>
+#define vvi vt<vi>
+#define vvl vt<vl>
+#define vii vt<ii>
 #define fi first
 #define se second
+#define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
 #define F_OR(i, a, b, s) for (int i=(a); (s)>0? i<(b) : i>(b); i+=(s))
 #define F_OR1(n) F_OR(i, 0, n, 1)
 #define F_OR2(i, e) F_OR(i, 0, e, 1)
@@ -25,17 +31,34 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-void testGen(){
-    srand(time(NULL));
-    freopen("test.inp", "w", stdout);
-    int n = rand() % 20+10;
-    cout << n << '\n';
-    FOR(n) cout << rand()%5+1 << " ";
+const int d4x[] = {-1, 0, 1, 0},
+          d4y[] = {0, -1, 0, 1},
+          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+void read(vi &x){
+    FOR(x.size()) cin >> x[i];
 }
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    testGen();
+    // freopen("test.inp", "r", stdin);
+    freopen("test.out", "r", stdin);
+
+    int n = 1e5;
+    vt<string> v(n);
+    FOR(n) cin >> v[i];
+    fclose(stdin);
+
+    freopen("a.out", "r", stdin);
+    freopen("test.inp", "w", stdout);
+    vt<string> v1(n);
+    cin >> n;
+    FOR(n) cin >> v1[i];
+    FOR(n){
+        // cout << v[i] << "\n" << v1[i] << '\n';
+        if (v[i]!=v1[i]) cout << i << '\n';
+    }
 }

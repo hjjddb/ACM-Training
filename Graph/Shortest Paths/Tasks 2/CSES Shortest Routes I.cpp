@@ -13,13 +13,14 @@ using namespace __gnu_pbds;
 #define ld long double
 #define ii pair<int, int>
 #define iii pair<int, ii>
-#define vc vt<char>
 #define vi vt<int>
 #define vl vt<ll>
-#define vvc vt<vc>
+#define vc vt<char>
+#define vii vt<ii>
 #define vvi vt<vi>
 #define vvl vt<vl>
-#define vii vt<ii>
+#define vvc vt<vc>
+#define vvii vt<vii>
 #define fi first
 #define se second
 #define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
@@ -37,6 +38,8 @@ const int d4x[] = {-1, 0, 1, 0},
           d4y[] = {0, -1, 0, 1},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
           d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+const ll oo = 1e16;
+vt<vt<pair<ll, int>>> G;
 
 template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
     cout << "(" << x.fi << "," << x.se << ")";
@@ -49,7 +52,8 @@ template<class T> void read1(T &x){
 
 template<class T> void read2(vt<T> &x){
     FOR(x.size()) read1(x[i]);
-}	
+}
+
 template<class T> void print1(T &x){
     EACH(xi, x) cout << xi << ' ';
     cout << '\n';
@@ -61,40 +65,10 @@ template<class T> void print2(vt<T> &x){
     }
 }
 
-bool isMagic(const vvi &x){
-    for(int i=0; i<3; ++i){
-        int s(0);
-        for(int j=0; j<3; ++j) s+=x[i][j];
-        if (s!=12) return false;
-    }
-    for(int i=0; i<3; ++i){
-        int s(0);
-        for(int j=0; j<3; ++j) s+=x[j][i];
-        if (s!=12) return false;
-    }
-    vi s(2);
-    for(int i=0; i<3; ++i){
-        s[0]+=x[i][i];
-        s[1]+=x[i][2-i];
-    }
-    return s[0]==s[1]&&s[1]==12;
-}
-
-vector<bool> check(10, 1);
-vector<int> v(9);
-
-void backtrack(int id){
-    for(int i=1; i<10; ++i){
-        if (check[i]){
-            v[id]=i;
-            if (id==8) print1(v);
-            else {
-                check[i]=false;
-                backtrack(id+1);
-                check[i]=true;
-            }
-        }    
-    }
+template<class T> bool optimize(T &x, T y){
+    if (x>y) x=y;
+    else return false;
+    return true;
 }
 
 int main(){
@@ -102,7 +76,32 @@ int main(){
     cin.tie(0);
 
     // freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.out", "w", stdout);
 
-    backtrack(0);
+    int n, m;
+    cin >> n >> m;
+    G=vt<vt<pair<ll, int>>>(n);
+    FOR(m){
+        int u, v;
+        ll w;
+        cin >> u >> v >> w;
+        G[u-1].pb(make_pair(w, v-1));
+    }
+    vt<ll> d(n, oo);
+    d[0]=0;
+    priority_queue<pair<ll, ll>, vt<pair<ll, ll>>, greater<pair<ll, ll>>> q;
+    q.push(make_pair(d[0], 0));
+    while(q.size()){
+        int u(q.top().se);
+        ll du(q.top().fi);
+        q.pop();
+        if (du!=d[u]) continue;
+
+        EACH(e, G[u]){
+            int v(e.se);
+            ll uv(e.fi);
+            if (optimize(d[v], du+uv)) q.push(make_pair(d[v], v));
+        }
+    }
+    print1(d);
 }

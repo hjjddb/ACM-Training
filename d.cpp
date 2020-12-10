@@ -1,48 +1,168 @@
-#include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
+#include <assert.h>
+#include <stdio.h>
 
+#include <algorithm>
+#include <iostream>
+#include <vector>
 using namespace std;
-using namespace __gnu_pbds;
 
-#define ar array
-#define vt vector
-#define all(v) (v).begin(), (v).end()
-#define pb push_back
-#define ll long long
-#define ld long double
-#define ii pair<int, int>
-#define iii pair<int, ii>
-#define fi first
-#define se second
-#define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
-#define F_OR(i, a, b, s) for (int i=(a); (s)>0? i<(b) : i>(b); i+=(s))
-#define F_OR1(n) F_OR(i, 0, n, 1)
-#define F_OR2(i, e) F_OR(i, 0, e, 1)
-#define F_OR3(i, b, e) F_OR(i, b, e, 1)
-#define F_OR4(i, b, e, s) F_OR(i, b, e, s)
-#define GET5(a, b, c, d, e, ...) e
-#define F_ORC(...) GET5(__VA_ARGS__, F_OR4, F_OR3, F_OR2, F_OR1)
-#define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
-#define EACH(x, a) for(auto& x: a)
+#define long long long
 
-const int d4x[] = {-1, 0, 1, 0},
-          d4y[] = {0, -1, 0, 1},
-          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
-          MOD = 1e9+7;
+typedef vector<int> vi;
+const int BASE = 10000;
 
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
+void fix(vi &a) {
+    a.push_back(0);
+    for (int i = 0; i < a.size() - 1; ++i) {
+        a[i + 1] += a[i] / BASE;
+        a[i] %= BASE;
+        if (a[i] < 0) {
+            a[i] += BASE;
+            a[i + 1]--;
+        }
+    }
+    while (a.size() >= 2 && a.back() == 0) a.pop_back();
+}
 
-    // freopen("test.inp", "r", stdin);
-    // freopen("test.out", "w", stdout);
+vi operator*(const vi &a, const vi &b) {
+    vi c(a.size() + b.size() + 1);
+    for (int i = 0; i < a.size(); ++i)
+        for (int j = 0; j < b.size(); ++j) {
+            c[i + j] += a[i] * b[j];
+            c[i + j + 1] += c[i + j] / BASE;
+            c[i + j] %= BASE;
+        }
+    return fix(c), c;
+}
 
-    int n;
-    cin >> n;
-    ll dp[n+1];
-    dp[0]=1, dp[1]=0;
-    FOR(i, 2, n+1) dp[i]=(i-1)*(dp[i-1]+dp[i-2])%MOD;
-    cout << dp[n];
+vi to_vi(int x) {  // x < Base
+    assert(x < BASE);
+    return vi(1, x);
+}
+
+vi operator+(vi a, const vi &b) {
+    a.resize(max(a.size(), b.size()));
+    for (int i = 0; i < b.size(); ++i)
+        a[i] += b[i];
+    return fix(a), a;
+}
+vi operator-(vi a, const vi &b) {
+    for (int i = 0; i < b.size(); ++i)
+        a[i] -= b[i];
+    return fix(a), a;
+}
+vi operator*(vi a, int x) {  // x < BASE
+    assert(x < BASE);
+    for (int i = 0; i < a.size(); ++i)
+        a[i] *= x;
+    return fix(a), a;
+}
+
+bool operator<(const vi &a, const vi &b) {
+    if (a.size() != b.size()) return a.size() < b.size();
+    for (int i = a.size() - 1; i >= 0; i--)
+        if (a[i] != b[i])
+            return a[i] < b[i];
+    return false;
+}
+
+vi operator/(vi a, int x) {  // x < BASE
+    assert(x < BASE);
+    for (int i = (int)a.size() - 1, r = 0; i >= 0; --i, r %= x) {
+        r = r * BASE + a[i];
+        a[i] = r / x;
+    }
+    return fix(a), a;
+}
+int operator%(const vi &a, int x) {  //x < BASE
+    int r = 0;
+    for (int i = (int)a.size() - 1; i >= 0; --i)
+        r = (r * BASE + a[i]) % x;
+    return r;
+}
+
+istream &operator>>(istream &cin, vi &a) {
+    string s;
+    cin >> s;
+    a.clear();
+    a.resize(s.size() / 4 + 1);
+    for (int i = 0; i < s.size(); ++i) {
+        int x = (s.size() - 1 - i) / 4;  // <- log10(BASE)=4
+        a[x] = a[x] * 10 + (s[i] - '0');
+    }
+    return fix(a), cin;
+}
+
+ostream &operator<<(ostream &cout, const vi &a) {
+    printf("%d", a.back());
+    for (int i = (int)a.size() - 2; i >= 0; i--)
+        printf("%04d", a[i]);
+    return cout;
+}
+
+void test_fib(int n) {
+    vi a = to_vi(1), b = to_vi(1);
+    for (int i = 1; i <= n / 2; ++i) {
+        a = a + b;
+        b = b + a;
+        cout << "F[" << i * 2 + 1 << "]=" << a << endl;
+        cout << "F[" << i * 2 + 2 << "]=" << b << endl;
+    }
+}
+
+void test_fact(int n) {
+    vi P = to_vi(1);
+    for (int i = 1; i <= n; ++i) {
+        P = P * i;
+        cout << i << "!= " << P << endl;
+    }
+}
+
+void test_divide() {
+    vi a;
+    int x;
+    for (;;) {
+        cout << "Input a big integer and a small integer (<10000)" << endl;
+        if (cin >> a >> x)
+            ;
+        else
+            break;
+        cout << "a=" << a << " x=" << x << endl;
+        vi q = a / x;
+        int r = a % x;
+        cout << "a/x=" << q << "; a%x=" << r << endl;
+        vi a0 = q * to_vi(x) + to_vi(r);
+        assert(a0 == a && !(a0 < a) && !(a0 > a));
+    }
+}
+
+int main() {
+    freopen("test.inp", "r", stdin);
+    freopen("test.out", "w", stdout);
+    // cout << "Press Enter to run test_fib()" << endl;
+    // cin.ignore(1);
+    // test_fib(100);
+    // cout << "Press Enter to run test_fact()" << endl;
+    // cin.ignore(1);
+    test_fact(25);
+    // cout << "Press Enter to run test_divide()" << endl;
+    // cin.ignore(1);
+    // test_divide();
+    // vi a, b;
+    // cin >> a >> b;
+    // if (a < b)
+    //     cout << "a<b\n";
+    // else if (b < a)
+    //     cout << "a>b\n";
+    // else
+    //     cout << "a=b\n";
+    // cout << a + b << '\n';
+    // if (a < b) swap(a, b);  //a must be >= b
+    // cout << a - b << '\n';
+    // cout << a * b << '\n';
+    // cin >> a;
+    // int x;
+    // cin >> x;
+    // cout << a / x << '\n';
+    // cout << a % x << '\n';
 }

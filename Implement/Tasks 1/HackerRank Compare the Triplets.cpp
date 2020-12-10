@@ -15,6 +15,7 @@ using namespace __gnu_pbds;
 #define iii pair<int, ii>
 #define fi first
 #define se second
+#define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
 #define F_OR(i, a, b, s) for (int i=(a); (s)>0? i<(b) : i>(b); i+=(s))
 #define F_OR1(n) F_OR(i, 0, n, 1)
 #define F_OR2(i, e) F_OR(i, 0, e, 1)
@@ -25,17 +26,25 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-void testGen(){
-    srand(time(NULL));
-    freopen("test.inp", "w", stdout);
-    int n = rand() % 20+10;
-    cout << n << '\n';
-    FOR(n) cout << rand()%5+1 << " ";
-}
+const int d4x[] = {-1, 0, 1, 0},
+          d4y[] = {0, -1, 0, 1},
+          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    testGen();
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
+
+    vt<int> a(3), b(3);
+    int A(0), B(0);
+    FOR(3) cin >> a[i];
+    FOR(3) cin >> b[i];
+    FOR(3){
+        if (a[i]>b[i]) ++A;
+        if (b[i]>a[i]) ++B;
+    }
+    cout << A << " " << B;
 }

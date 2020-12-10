@@ -13,13 +13,6 @@ using namespace __gnu_pbds;
 #define ld long double
 #define ii pair<int, int>
 #define iii pair<int, ii>
-#define vc vt<char>
-#define vi vt<int>
-#define vl vt<ll>
-#define vvc vt<vc>
-#define vvi vt<vi>
-#define vvl vt<vl>
-#define vii vt<ii>
 #define fi first
 #define se second
 #define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
@@ -38,35 +31,41 @@ const int d4x[] = {-1, 0, 1, 0},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
           d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
-    cout << "(" << x.fi << "," << x.se << ")";
-    return cout;
-}
-
-template<class T> void read1(T &x){
-    FOR(x.size()) cin >> x[i];
-}
-
-template<class T> void read2(vt<T> &x){
-    FOR(x.size()) read1(x[i]);
-}
-
-template<class T> void print1(T &x){
-    EACH(xi, x) cout << xi << ' ';
-    cout << '\n';
-}
-
-template<class T> void print2(vt<T> &x){
-    FOR(x.size()){
-        print1(x[i]);
+void trau(string a, string b){
+    int ans(0);
+    FOR(i, a.size()){
+        FOR(j, i, a.size()){
+            string s = "";
+            FOR(k, i, j+1) s+=a[k];
+            cout << b.find(s) << '\n';
+            // if (b.find(s)!=b.end()) ans = max(ans, j-i+1);
+        }
     }
+    cout << ans << '\n';
 }
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
+    int t;
+    cin >> t;
+    while(t--){
+        string a, b;
+        cin >> a >> b;
+        vt<vt<int>> dp(a.size()+1, vt<int>(b.size()+1, 0));
+        int ans(0);
+        FOR(i, a.size()){
+            FOR(j, b.size()){
+                if (a[i]==b[j]) dp[i+1][j+1]=dp[i][j]+1;
+                // else dp[i+1][j+1] = 0;
+            }
+        }
+        FOR(i, a.size()+1) FOR(j, b.size()+1) ans = max(ans, dp[i][j]);
+        // cout << dp[a.size()][b.size()] << "\n";
+        cout << ans << '\n';
+    }
 }

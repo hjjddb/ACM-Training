@@ -13,10 +13,8 @@ using namespace __gnu_pbds;
 #define ld long double
 #define ii pair<int, int>
 #define iii pair<int, ii>
-#define vc vt<char>
 #define vi vt<int>
 #define vl vt<ll>
-#define vvc vt<vc>
 #define vvi vt<vi>
 #define vvl vt<vl>
 #define vii vt<ii>
@@ -37,6 +35,7 @@ const int d4x[] = {-1, 0, 1, 0},
           d4y[] = {0, -1, 0, 1},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
           d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+const ll oo = 1e18;
 
 template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
     cout << "(" << x.fi << "," << x.se << ")";
@@ -61,48 +60,31 @@ template<class T> void print2(vt<T> &x){
     }
 }
 
-bool isMagic(const vvi &x){
-    for(int i=0; i<3; ++i){
-        int s(0);
-        for(int j=0; j<3; ++j) s+=x[i][j];
-        if (s!=12) return false;
-    }
-    for(int i=0; i<3; ++i){
-        int s(0);
-        for(int j=0; j<3; ++j) s+=x[j][i];
-        if (s!=12) return false;
-    }
-    vi s(2);
-    for(int i=0; i<3; ++i){
-        s[0]+=x[i][i];
-        s[1]+=x[i][2-i];
-    }
-    return s[0]==s[1]&&s[1]==12;
-}
-
-vector<bool> check(10, 1);
-vector<int> v(9);
-
-void backtrack(int id){
-    for(int i=1; i<10; ++i){
-        if (check[i]){
-            v[id]=i;
-            if (id==8) print1(v);
-            else {
-                check[i]=false;
-                backtrack(id+1);
-                check[i]=true;
-            }
-        }    
-    }
-}
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
     // freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.out", "w", stdout);
 
-    backtrack(0);
+    int n, m, q;
+    cin >> n >> m >> q;
+    vvl d(n, vl(n, oo));
+    FOR(m){
+        int u, v, w;
+        cin >> u >> v >> w, --u, --v;
+        d[u][v]=min(d[u][v], 1LL*w);
+        d[v][u]=min(d[v][u], 1LL*w);
+    }
+    FOR(n) d[i][i]=0;
+    FOR(k, n){
+        FOR(i, n){
+            FOR(j, n) d[i][j]=min(d[i][j], d[i][k]+d[k][j]);
+        }
+    }
+    while(q--){
+        int u, v;
+        cin >> u >> v, --u, --v;
+        cout << (d[u][v]>=oo?-1:d[u][v]) << '\n';
+    }
 }

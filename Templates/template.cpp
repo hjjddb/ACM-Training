@@ -38,6 +38,11 @@ const int d4x[] = {-1, 0, 1, 0},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
           d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
+template<class T1, class T2> istream &operator >>(istream &cin, pair<T1, T2> &x){
+    cin >> x.fi >> x.se;
+    return cin;
+}
+
 template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
     cout << "(" << x.fi << "," << x.se << ")";
     return cout;
@@ -49,7 +54,8 @@ template<class T> void read1(T &x){
 
 template<class T> void read2(vt<T> &x){
     FOR(x.size()) read1(x[i]);
-}	
+}
+
 template<class T> void print1(T &x){
     EACH(xi, x) cout << xi << ' ';
     cout << '\n';
@@ -61,48 +67,10 @@ template<class T> void print2(vt<T> &x){
     }
 }
 
-bool isMagic(const vvi &x){
-    for(int i=0; i<3; ++i){
-        int s(0);
-        for(int j=0; j<3; ++j) s+=x[i][j];
-        if (s!=12) return false;
-    }
-    for(int i=0; i<3; ++i){
-        int s(0);
-        for(int j=0; j<3; ++j) s+=x[j][i];
-        if (s!=12) return false;
-    }
-    vi s(2);
-    for(int i=0; i<3; ++i){
-        s[0]+=x[i][i];
-        s[1]+=x[i][2-i];
-    }
-    return s[0]==s[1]&&s[1]==12;
-}
-
-vector<bool> check(10, 1);
-vector<int> v(9);
-
-void backtrack(int id){
-    for(int i=1; i<10; ++i){
-        if (check[i]){
-            v[id]=i;
-            if (id==8) print1(v);
-            else {
-                check[i]=false;
-                backtrack(id+1);
-                check[i]=true;
-            }
-        }    
-    }
-}
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    // freopen("test.inp", "r", stdin);
+    freopen("test.inp", "r", stdin);
     freopen("test.out", "w", stdout);
-
-    backtrack(0);
 }

@@ -1,0 +1,53 @@
+Bảo mật thông tin
+    Các vấn đề của an toàn thông tin
+        Bảo mật: con đường trung chuyển thông tin không an toàn
+        Toàn vẹn thông tin: thông tin có bị chỉnh sửa, làm sai lệch?
+        Ai là ai?: Xác định được người đã chuyển thông tin là ai 
+
+        Quá trình: 
+            Mã hóa thông tin -> truyền thông tin -> giải mã thông tin
+
+    Xử lí cho hai người cần khóa chung
+    Thuật toán mã mũ Pohlig-Hellman
+        C = pow(M, E) % p;
+        M = pow(C, D) % p;
+        E*D = 1 (mod p-1)
+
+        M là thông tin gốc, 
+        C là thông tin được mã hóa
+        E và D là các biến mật mã được dùng để mã hóa và giả mã thông tin 
+
+        *Đề nghị: p là một số nguyên tố lớn,
+        D và E bí mật
+
+        Difie-Hellman Key Exchange
+        K = pow(g, ab) % p, g = generator 
+
+    Bài toán logarit rời rạc:
+        Cho p thuộc P, A thuộc Z, g<p. Tìm a tm A = pow(g, a)%p;
+
+        *Không có thuật toán nào đủ tốt để giải bài toán với p đủ lớn.
+
+    Xử lí cho nhiều người cần tìm khóa chung
+        Thuật toán RSA:
+            Chọn 2 số p, q thuộc Pohlig 
+            Tính n = p*q
+            Tính hàm Euler f(n) = (p-1)*(q-1)
+            Chọn 2 thuộc Z nhỏ hơn và nguyên tố cùng nhau với f(n) (ĐL Euler)
+            Tìm d sao cho de = 1 (mod f(n)) và d<f(n)
+            Khóa công khai KU = {e, n}
+            Khóa bí mật KR = {d, n}
+        Mã hóa khóa công khai
+            Nã hóa bằng khóa công khai của bản thân/ khóa công khai của người nhận
+        Độ an toàn của Ré:
+            Dựa trên thực tế, phụ thuộc vào độ lớn của p và q 
+
+The logicstic map
+    x[n+1] = k*x[n]*(1-x[n])
+    k>0: grownth rate
+    0 <= x[] <= 1
+    x[n+1] = f(x[n]), n>=1
+
+    The simplest model: x[n+1] = k(x[n]) -> not so useful in real life
+    The better one:
+        x[n+1] = k*x[n]*(1-x[n])

@@ -1,18 +1,14 @@
 #include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
-using namespace __gnu_pbds;
 
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
 #define pb push_back
-#define ll long long
-#define ld long double
 #define ii pair<int, int>
-#define iii pair<int, ii>
+#define vii vt<ii>
+#define vvii vt<vii>
 #define fi first
 #define se second
 #define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
@@ -26,36 +22,25 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-const int d4x[] = {-1, 0, 1, 0},
-          d4y[] = {0, -1, 0, 1},
-          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
-          N = 2e5+1;
-const ll oo = LLONG_MAX;
-int n, // number of vertices 
-    m, // number of edges
-    s, // start vertex
-    e; // end vertex
-vt<vt<ii>> G; // adjancency list of edge, G is directed weighted graph
-ll d[N]; // distance from s_v to e_v
+const int oo = 1e9;
+vvii G;
+vi d;
 
-void dijkstra(vt<vt<ii>> G){
-    // NOTE: the algorithm will fail if G contains negative cycles
-    fill_n(d, sizeof(d)/sizeof(d[0]), oo);
-    priority_queue<ii, vt<ii>, greater<ii>> pq; 
-    d[s] = 0;
-    pq.push({0, s});
+void dijkstra(){
+    int n = G.size();
+    priority_queue<ii, vii, greater<ii>> pq;
+    pb.push(ii(0, 1));
+
     while(pq.size()){
-        int u(pq.top().se), du(pq.top().fi);
+        int u = pq.top().se,
+            du = pq.top().fi;
         pq.pop();
-        if (du != d[u]) continue; // suppose we have 
+        if (du!=d[u]) continue;
 
-        EACH(e, G[u]){
-            int v(e.se), uv(e.fi);
-            if (d[v]>du+uv){
-                d[v]=du+uv;
-                pq.push({d[v], v});
-            }
+        FOR(i, G[u].size()){
+            int v = G[u][i].se,
+                uv = G[u][i].fi;
+            if (d[v] > du+uv) d[v] = du+uv, pq.push({d[v], v});
         }
     }
 }
@@ -67,14 +52,14 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    cin >> n >> m;
-    G = vt<vt<ii>>(n+1);
-    FOR(m){
+    int n, m;
+    G = vvii(n+1);
+    d = vi(n+1, oo);
+    while(m--){
         int u, v, w;
         cin >> u >> v >> w;
-        G[u].pb(ii(w, v));
+        G[u].pb({w, v});
+        G[v].pb({w, u});
     }
-    cin >> s >> e;
-    dijkstra(G);
-    cout << d[e];
+    dijkstra();
 }

@@ -1,18 +1,14 @@
 #include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
 
 using namespace std;
-using namespace __gnu_pbds;
 
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
 #define pb push_back
-#define ll long long
-#define ld long double
 #define ii pair<int, int>
-#define iii pair<int, ii>
+#define vii vt<ii>
+#define vvii vt<vii>
 #define fi first
 #define se second
 #define FORIT(i, s) for (auto it=(s.begin()); it!=(s.end()); ++it)
@@ -26,30 +22,27 @@ using namespace __gnu_pbds;
 #define FOR(...) F_ORC(__VA_ARGS__)(__VA_ARGS__)
 #define EACH(x, a) for(auto& x: a)
 
-const int d4x[] = {-1, 0, 1, 0},
-          d4y[] = {0, -1, 0, 1},
-          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
-          MOD = 1e9+7;
+const int oo = 1e9;
+vvii G;
+vi d;
 
-#define Mat vt<vt<ll>>
-Mat E;
+void dijkstra(){
+    int n = G.size();
+    priority_queue<ii, vii, greater<ii>> pq;
+    pb.push(ii(0, 1));
 
-Mat operator * (const Mat &x, const Mat &y){
-    Mat res(x.size(), vt<ll>(y[0].size()));
-    FOR(res.size())
-        FOR(j, res[0].size())
-            FOR(k, x[0].size())
-                res[i][j]=(res[i][j]+x[i][k]*y[k][j])%MOD;
-    return res;
-}
+    while(pq.size()){
+        int u = pq.top().se,
+            du = pq.top().fi;
+        pq.pop();
+        if (du!=d[u]) continue;
 
-Mat powM(Mat x, ll k){
-    if (!k) return E;
-    if (k==1) return x;
-    Mat half = powM(x, k/2);
-    if (k&1) return half*half*x;
-    return half*half;
+        FOR(i, G[u].size()){
+            int v = G[u][i].se,
+                uv = G[u][i].fi;
+            if (d[v] > du+uv) d[v] = du+uv, pq.push({d[v], v});
+        }
+    }
 }
 
 int main(){
@@ -59,26 +52,14 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    ll n;
-    cin >> n;
-    
-    E = Mat(6, vt<ll>(6));
-    FOR(6) E[i][i]=1;
-    vt<ll> dp(13);
-    dp[0]=1;
-    FOR(i, 1, 13)
-        FOR(j, 1, min(6, i)+1)
-            dp[i]=(dp[i]+dp[i-j])%MOD;
-    if (n<6){
-        cout << dp[n];
-        return 0;
+    int n, m;
+    G = vvii(n+1);
+    d = vi(n+1, oo);
+    while(m--){
+        int u, v, w;
+        cin >> u >> v >> w;
+        G[u].pb({w, v});
+        G[v].pb({w, u});
     }
-    Mat f = Mat(6, vt<ll>(6));
-    FOR(i, 5) f[i][i+1]=1;
-    FOR(j, 6) f[5][j]=1;
-    Mat pf = powM(f, n-6);
-    Mat x = Mat(6, vt<ll>(1));
-    FOR(6) x[i][0] = dp[i+1];
-    Mat res = pf*x;
-    cout << (pf*x)[5][0];
+    dijkstra();
 }
