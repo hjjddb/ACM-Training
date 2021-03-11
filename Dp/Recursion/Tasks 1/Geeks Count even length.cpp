@@ -1,9 +1,11 @@
-#include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
 
+
+#include<bits/stdc++.h>
 using namespace std;
-using namespace __gnu_pbds;
+
+ // } Driver Code Ends
+
+
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
@@ -58,30 +60,49 @@ template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
     return cout;
 }
 
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+const ll MOD(1e9+7);
+int n;
+vl f;
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
-
-    int t;
-    cin >> t;
-    while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
-    }
+ll powM(ll x, ll k){
+    if (!k) return 1;
+    if (k==1) return x;
+    ll half(powM(x, k>>1));
+    if (k&1) return half*half%MOD*x%MOD;
+    return half*half%MOD;
 }
+
+ll c(ll n, ll k){
+    return f[n]*powM(f[n-k]*f[k]%MOD, MOD-2)%MOD;
+}
+
+class Solution{
+	public:
+	int compute_value(int n)
+	{
+        f.resize(n+1);
+        f[0]=1;
+        FOR(i, 1, n+1) f[i]=f[i-1]*i, f[i]%=MOD;
+        
+        ll ans(0);
+        FOR(n+1){
+            ans += c(n, i)*c(n, i)%MOD;
+            ans %= MOD;
+        }
+        return ans;
+	}
+};
+
+// { Driver Code Starts.
+int main(){
+	int tc;
+	cin >> tc;
+	while(tc--){
+		int n;
+		cin >> n;
+		Solution ob;
+		int ans = ob.compute_value(n);
+		cout << ans <<"\n";
+	}
+	return 0;
+}  // } Driver Code Ends

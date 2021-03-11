@@ -38,7 +38,8 @@ const int d4x[] = {-1, 0, 1, 0},
         d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 template<class T1, class T2> istream &operator >>(istream &cin, pair<T1, T2> &x){
-    cin >> x.fi >> x.se;
+
+cin >> x.fi >> x.se;
     return cin;
 }
 
@@ -58,30 +59,69 @@ template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
     return cout;
 }
 
+const int oo = 1e7;
+int t, n, m, k;
+vvc a;
+vvi d;
+
+bool inside(int x, int y){
+    return 0<=x&&x<n&&0<=y&&y<m;
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
     int t;
     cin >> t;
     while(t--){
-        int n, m;
         cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+        a = vvc(n, vc(m));
+        d = vvi(n, vi(m, oo));
+        cin >> a >> k;
+        int ex, ey, ans(0);
+        
+        queue<ii> q;
+        FOR(n) FOR(j, m){
+            if (a[i][j]=='M'){
+                q.push({i, j}), d[i][j]=0;
+                // break;
+            } else if (a[i][j]=='*') ex=i, ey=j;
+        }
+        while(q.size()){
+            int x(q.front().fi), y(q.front().se);
+            q.pop();
+            if (x==ex&&y==ey) break;
+
+            FOR(4){
+                int nx(x+d4x[i]), ny(y+d4y[i]);
+                if (inside(nx, ny)&&a[nx][ny]!='X'){
+                    d[nx][ny] = min(d[nx][ny], d[x][y]+1);
+                    q.push({nx, ny});
+                    a[nx][ny]='X';
+                }
+            }
+        }
+        queue<ii>().swap(q);
+        q.push({ex, ey});
+        while(q.size()){
+            int x(q.front().fi), y(q.front().se);
+            q.pop();
+
+            int c(0);
+            FOR(4){
+                int nx(x+d4x[i]), ny(y+d4y[i]);
+                if (inside(nx, ny)){
+                    if (d[nx][ny]==d[x][y]-1){
+                        q.push({nx, ny});
+                    } else if (d[nx][ny]==d[x][y]+1) ++c;
+                }
+            }
+            ans += (c>1);
+        }
+        cout << (ans==k? "Impressed" : "Oops!") << '\n';
     }
 }

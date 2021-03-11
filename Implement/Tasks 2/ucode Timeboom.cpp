@@ -38,7 +38,8 @@ const int d4x[] = {-1, 0, 1, 0},
         d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 template<class T1, class T2> istream &operator >>(istream &cin, pair<T1, T2> &x){
-    cin >> x.fi >> x.se;
+
+cin >> x.fi >> x.se;
     return cin;
 }
 
@@ -62,26 +63,60 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+    string num[10][6];
+    num[0][0] = num[0][4] = "***";
+    num[0][1] = num[0][2] = num[0][3] = "* *";
+
+    FOR(5) num[1][i] = "  *";
+    
+    FOR(i, 2, 10){
+        if (i!=4) num[i][0] = "***";
+        else num[i][0] = "* *";
     }
+    num[2][1] = num[3][1] = "  *";
+    num[4][1] = num[8][1] = num[9][1] = "* *";
+    num[5][1] = num[6][1] = "*  ";
+    num[7][1] = "  *";
+
+    FOR(i, 2, 10){
+        if (i!=7) num[i][2] = "***";
+        else num[i][2] = "  *";
+    }
+    num[2][3] = "*  ";
+    FOR(i, 3, 10){
+        if (i!=6&&i!=8) num[i][3] = "  *";
+        else num[i][3] = "* *";
+    }
+    
+    FOR(i, 2, 10){
+        if (i!=4&&i!=7) num[i][4] = "***";
+        else num[i][4] = "  *";
+    }
+
+    string a[5];
+    FOR(5) getline(cin, a[i]);
+    int n = (a[0].size()+1)>>2;
+
+    bool react(1);
+    int ans(0);
+    FOR(n){
+        string x[5];
+        FOR(j, 5) x[j] = a[j].substr(i<<2, 3);
+        FOR(j, 10){
+            bool flag(1);
+            FOR(k, 5) FOR(l, 3) if (x[k][l]!=num[j][k][l]) flag=0;
+            if (flag){
+                ans += j;
+                if (i==n-1){
+                    react^=(j&1);
+                }
+                break;
+            }
+        }
+    }
+    if (react) cout << (ans%3 ? "BOOM!!" : "BEER!!");
+    else cout << "BOOM!!";
 }

@@ -62,26 +62,27 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+    string s;
+    cin >> s;
+    int n(s.size()), l(n), r(-1);
+    bool flag(1);
+    for(int i=0; i<n&&flag; ++i){
+        if (s[i]=='['){
+            for(int j=i+1; j<n&&flag; ++j) if (s[j]==':') l=j, flag=0;
+            break;
+        }
     }
+    flag=1;
+    for(int i=n-1; i>=0&&flag; --i){
+        if (s[i]==']'){
+            for(int j=i-1; j>=0&&flag; --j) if (s[j]==':') r=j, flag=0;
+            break;
+        }
+    }
+    int ans(4);
+    FOR(i, l+1, r) ans += s[i]=='|';
+    cout << (l<r? ans : -1);
 }

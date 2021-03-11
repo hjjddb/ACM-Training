@@ -58,30 +58,55 @@ template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
     return cout;
 }
 
+int n;
+vt<bool> vs;
+vi res;
+bool flag(0);
+
+void to_bi(int x){
+    vi res;
+    while(x){
+        res.pb(x&1);
+        x>>=1;
+    }
+    res.resize(n);
+    FOR(i, res.size()-1, -1, -1) cout << res[i];
+    cout << '\n';
+    return;
+}
+
+void backtrack(int u){
+    if (!flag){
+        FOR(n){
+            int mask(1<<i);
+            int v(mask^u);
+            if (!vs[v]){
+                vs[v]=1;
+                res.pb(v);
+                if (res.size()==1<<n){
+                    flag=1;
+                    FOR(j, res.size()) to_bi(res[j]);
+                    return;
+                } else {
+                    backtrack(v);
+                    vs[v]=0;
+                    res.pop_back();
+                }
+            }
+        }
+    }
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
-    }
+    cin >> n;
+    vs = vt<bool>(1<<n);
+    vs[0]=1;
+    res.pb(0);
+    backtrack(0);
 }

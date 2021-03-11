@@ -62,26 +62,19 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+    string s;
+    cin >> s;
+    vi r[2];
+    FOR(s.size()-1){
+        if (s.substr(i, 2)=="AB") r[0].pb(i);
+        if (s.substr(i, 2)=="BA") r[1].pb(i);
     }
+    if (r[0].empty()||r[1].empty()){
+        cout << "NO";
+        return 0;
+    }
+    cout << (max(abs(r[0][0]-r[1].back()), abs(r[1][0]-r[0].back()))>1 ? "YES" : "NO");
 }

@@ -1,9 +1,12 @@
-#include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
+// Initial Template for C++
 
+#include <bits/stdc++.h>
 using namespace std;
-using namespace __gnu_pbds;
+
+ // } Driver Code Ends
+
+
+// User function Template for C++
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
@@ -33,55 +36,62 @@ using namespace __gnu_pbds;
 #define EACH(x, a) for(auto& x: a)
 
 const int d4x[] = {-1, 0, 1, 0},
-        d4y[] = {0, -1, 0, 1},
-        d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-        d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+		d4y[] = {0, -1, 0, 1},
+		d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+		d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 template<class T1, class T2> istream &operator >>(istream &cin, pair<T1, T2> &x){
-    cin >> x.fi >> x.se;
-    return cin;
+	cin >> x.fi >> x.se;
+	return cin;
 }
 
 template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
-    cout << "(" << x.fi << "," << x.se << ")";
-    return cout;
+	cout << "(" << x.fi << "," << x.se << ")";
+	return cout;
 }
 
 template<class T> istream &operator >>(istream &cin, vt<T> &v){
-    FOR(v.size()) cin >> v[i];
-    return cin;
+	FOR(v.size()) cin >> v[i];
+	return cin;
 }
 
 template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
-    FOR(v.size()) cout << v[i] << " ";	
-    cout << '\n';
-    return cout;
+	FOR(v.size()) cout << v[i] << " ";	
+	cout << '\n';
+	return cout;
 }
+
+const int MOD(1e9+7);
+
+ll powM(int x, int k){
+    if (!k) return 1;
+    if (k==1) return x;
+    ll half(powM(x, k>>1));
+    return (k&1)? half*half%MOD*x%MOD : half*half%MOD;
+}
+
+class Solution{
+public:
+    int nCr(int n, int r){
+        if (r>n) return 0;
+        vl fac(n+1);
+        fac[0]=1;
+        FOR(i, 1, n+1) fac[i]=fac[i-1]*i%MOD;
+        return int(fac[n]*powM(fac[r]*fac[n-r]%MOD, MOD-2)%MOD);
+    }
+};
+
+// { Driver Code Starts.
 
 int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
-
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
-
     int t;
-    cin >> t;
+    cin>>t;
     while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+        int n, r;
+        cin>>n>>r;
+        
+        Solution ob;
+        cout<<ob.nCr(n, r)<<endl;
     }
-}
+    return 0;
+}  // } Driver Code Ends

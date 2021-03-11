@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace __gnu_pbds;
+
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
@@ -12,10 +13,8 @@ using namespace __gnu_pbds;
 #define ld long double
 #define ii pair<int, int>
 #define iii pair<int, ii>
-#define vc vt<char>
 #define vi vt<int>
 #define vl vt<ll>
-#define vvc vt<vc>
 #define vvi vt<vi>
 #define vvl vt<vl>
 #define vii vt<ii>
@@ -33,55 +32,58 @@ using namespace __gnu_pbds;
 #define EACH(x, a) for(auto& x: a)
 
 const int d4x[] = {-1, 0, 1, 0},
-        d4y[] = {0, -1, 0, 1},
-        d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-        d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
-
-template<class T1, class T2> istream &operator >>(istream &cin, pair<T1, T2> &x){
-    cin >> x.fi >> x.se;
-    return cin;
-}
+          d4y[] = {0, -1, 0, 1},
+          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
     cout << "(" << x.fi << "," << x.se << ")";
     return cout;
 }
 
-template<class T> istream &operator >>(istream &cin, vt<T> &v){
-    FOR(v.size()) cin >> v[i];
-    return cin;
+template<class T> void read1(T &x){
+    FOR(x.size()) cin >> x[i];
 }
 
-template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
-    FOR(v.size()) cout << v[i] << " ";	
+template<class T> void read2(vt<T> &x){
+    FOR(x.size()) read1(x[i]);
+}    
+template<class T> void print1(T &x){
+    EACH(xi, x) cout << xi << ' ';
     cout << '\n';
-    return cout;
+}
+
+template<class T> void print2(vt<T> &x){
+    FOR(x.size()){
+        print1(x[i]);
+    }
 }
 
 int main(){
     ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
     int t;
     cin >> t;
     while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+        int n;
+        cin >> n;
+        vt<char> a(n);
+        read1(a);
+        if (n<2) cout << (a[0]=='_' ? "YES\n" : "NO\n");
+        else if (n==2) cout << (a[0]==a[1] ? "YES\n" : "NO\n");
+        else {
+            bool flag(0);
+            FOR(n) if (a[i]=='_') flag=1;
+            if (flag) sort(all(a));
+            else flag=1;
+            for(int i=1; i<n-1&&flag; ++i) if (a[i]!='_'&& a[i]!=a[i+1]&&a[i]!=a[i-1]) flag=0;
+            while(a.back()=='_') a.pop_back(), --n;
+            if (a.size()) if (a[0]!=a[1]||a[n-1]!=a[n-2]) flag=0;
+            cout << (flag ? "YES\n" : "NO\n");
+        }
     }
 }

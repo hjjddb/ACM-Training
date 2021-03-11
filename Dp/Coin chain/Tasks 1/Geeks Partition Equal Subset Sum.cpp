@@ -62,26 +62,25 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+    int n;
+    cin >> n;
+    vi a(n);
+    cin >> a;
+
+    int s(0);
+    bool flag(1);
+    FOR(n) s+=a[i];
+    if (s&1) flag=0;
+    else {
+        vt<int> dp(s+1);
+        dp[0]=1;
+        FOR(n) FOR(j, s-a[i], -1, -1){
+            dp[j+a[i]]=dp[j+a[i]]|dp[j];
+        }
+        flag &= dp[s>>1];
     }
+    cout << (flag? "YES": "NO") << '\n';
 }

@@ -58,30 +58,50 @@ template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
     return cout;
 }
 
+int n;
+vi a;
+vl dp;
+
+bool check(int m){
+    if (m==n-1) return 1;
+    ll res(dp[m]), p(m+1);
+    while(res>=a[p]){
+        res+=1LL*a[p++];
+        if (p==n) break;
+    }
+    return p==n;
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
     int t;
     cin >> t;
     while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
-    }
+        cin >> n;
+        a.resize(n);
+        dp.resize(n);
+        cin >> a;
+        vi b = a;
+        sort(all(a));
+        dp[0]=a[0];
+        FOR(i, 1, n) dp[i]=dp[i-1]+1LL*a[i];
+        int l(0), r(n-1), m((l+r)>>1);
+        while(l!=m&&m!=r){
+            if (check(m)) r=m;
+            else l=m;
+            m=(l+r)>>1;
+        }
+        FOR(i, l, r+1) if (check(i)){
+            m=i;
+            break;
+        }
+        vi ans;
+        FOR(b.size()) if (b[i]>=a[m]) ans.pb(i+1);
+        cout << ans.size() << '\n' << ans;
+    }    
 }

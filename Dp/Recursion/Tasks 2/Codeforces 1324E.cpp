@@ -62,26 +62,25 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+    int n, h, l, r;
+    cin >> n >> h >> l >> r;
+    vvi dp(2, vi(h)), c(2, vi(h));
+    vi a(n);
+    cin >> a;
+    dp[0][0]=0, c[0][0]=1;
+    FOR(n){
+        c[1]=vi(h);
+        dp[1]=vi(h);
+        FOR(j, h) if (c[0][j]) FOR(k, 2){
+            int tmp((j+a[i]-k)%h); 
+            c[1][tmp]=1;
+            dp[1][tmp]=max(dp[1][tmp], dp[0][j]+(l<=tmp&&tmp<=r));
+        }
+        c[0]=c[1];
+        dp[0]=dp[1];
     }
+    cout << *max_element(all(dp[0]));
 }

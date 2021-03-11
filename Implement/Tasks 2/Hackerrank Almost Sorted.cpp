@@ -13,8 +13,10 @@ using namespace __gnu_pbds;
 #define ld long double
 #define ii pair<int, int>
 #define iii pair<int, ii>
+#define vc vt<char>
 #define vi vt<int>
 #define vl vt<ll>
+#define vvc vt<vc>
 #define vvi vt<vi>
 #define vvl vt<vl>
 #define vii vt<ii>
@@ -34,8 +36,7 @@ using namespace __gnu_pbds;
 const int d4x[] = {-1, 0, 1, 0},
           d4y[] = {0, -1, 0, 1},
           d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1},
-          N = 1e3+1;
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
     cout << "(" << x.fi << "," << x.se << ")";
@@ -48,7 +49,8 @@ template<class T> void read1(T &x){
 
 template<class T> void read2(vt<T> &x){
     FOR(x.size()) read1(x[i]);
-}    
+}
+
 template<class T> void print1(T &x){
     EACH(xi, x) cout << xi << ' ';
     cout << '\n';
@@ -60,31 +62,64 @@ template<class T> void print2(vt<T> &x){
     }
 }
 
+ii doSwap(vi a){
+    int n(a.size());
+    FOR(n-1){
+        if (a[i]>a[i+1]){
+            ii x({a[i], i});
+            FOR(j, i+1, n){
+                if (a[j]<x.fi) x={a[j], j};
+                else if (a[j]==x.fi) x.se=j;
+            }
+            swap(a[i], a[x.se]);
+            bool flag(1);
+            for(int j=0; j<n-1&&flag; ++j) flag&=(a[j]<=a[j+1]);
+            return flag? make_pair(i+1, x.se+1) : make_pair(-1, -1);
+        }
+    }
+    return make_pair(-1, 0);
+}
+
+ii doRev(vi a){
+    int n(a.size());
+    FOR(n-1){
+        if (a[i]>a[i+1]){
+            int j(i+1);
+            if (j==n-1) reverse(a.begin()+i, a.end());
+            else {
+                while(a[j]>=a[j+1]&&j<n-1) ++j;
+                reverse(a.begin()+i, a.begin()+j+1);
+            }
+            bool flag(1);
+            for(int j=0; j<n-1&&flag; ++j) flag&=(a[j]<=a[j+1]);
+            return flag? make_pair(i+1, j+1) : make_pair(-1, -1);
+        }
+    }
+    return make_pair(-1, 0);
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
-    
+
     int n;
     cin >> n;
-    vi c(N);
-    FOR(n){
-        int x;
-        cin >> x;
-        ++c[x];
+    vi a(n);
+    read1(a);
+    
+    ii res0(doSwap(a)), res1(doRev(a));
+    if (res0!=make_pair(-1, -1)){
+        cout << "yes\n";
+        if (res0!=make_pair(-1, 0)) cout << "swap " << res0.fi << " " << res0.se;
+        return 0;
+    } 
+    if (res1!=ii(-1, -1)){
+        cout << "yes\n";
+        if (res1!=make_pair(-1, 0)) cout << "reverse " << res1.fi << " " << res1.se;
+        return 0;
     }
-    int res(n);
-    while(res){
-        FOR(i, 1, N){
-            if (c[i]){
-                cout << res << '\n';
-                res -= c[i];
-                c[i]=0;
-                FOR(j, i+1, N) c[j-i]+=c[j], c[j]=0;
-                break;
-            }
-        }
-    }
+    cout << "no";
 }

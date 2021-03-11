@@ -53,6 +53,7 @@ template<class T> istream &operator >>(istream &cin, vt<T> &v){
 }
 
 template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
+    cout << " ";
     FOR(v.size()) cout << v[i] << " ";	
     cout << '\n';
     return cout;
@@ -62,26 +63,29 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
     int t;
     cin >> t;
     while(t--){
         int n, m;
         cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+        vvi a(n+1, vi(3));
+        FOR(n) FOR(j, 3) 
+            cin >> a[i+1][j];
+        sort(all(a));
+        vvi dp(n+1, vi(2));
+        dp[0][0] = dp[0][1] = m;
+        bool flag(1);
+        for(int i=1; i<=n&&flag; ++i){
+            int d(a[i][0]-a[i-1][0]);
+            int l(dp[i-1][0]-d),
+                r(dp[i-1][1]+d);
+            dp[i][0] = max(l, a[i][1]);
+            dp[i][1] = min(r, a[i][2]);
+            flag = dp[i][0]<=dp[i][1];
+        }
+        cout << (flag? "YES" : "NO") << '\n';
     }
 }

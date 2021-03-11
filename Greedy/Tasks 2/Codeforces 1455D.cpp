@@ -62,26 +62,30 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
+    // freopen("test.inp", "r", stdin);
+    // freopen("test.out", "w", stdout);
 
     int t;
     cin >> t;
     while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
+        int n, x;
+        cin >> n >> x;
+        vi a(n);
+        cin >> a;
+        bool flag(1);
+        for(int i=0; i<n-1&&flag; ++i) flag &= a[i]<=a[i+1];
+        if (flag) cout << 0;
+        else {
+            int ans(0);
+            for(int i=0; i<n&&!flag; ++i){
+                if (a[i]>x){
+                    flag=1;
+                    swap(a[i], x), ++ans;
+                    for(int j=0; j<n-1&&flag; ++j) flag &= a[j]<=a[j+1];
+                }
+            }
+            cout << (flag? ans : -1);
+        }
+        cout << '\n';
     }
 }

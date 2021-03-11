@@ -1,9 +1,8 @@
-#include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
-
+#include <bits/stdc++.h>
 using namespace std;
-using namespace __gnu_pbds;
+
+ // } Driver Code Ends
+
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
@@ -33,54 +32,68 @@ using namespace __gnu_pbds;
 #define EACH(x, a) for(auto& x: a)
 
 const int d4x[] = {-1, 0, 1, 0},
-        d4y[] = {0, -1, 0, 1},
-        d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-        d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+		d4y[] = {0, -1, 0, 1},
+		d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+		d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 template<class T1, class T2> istream &operator >>(istream &cin, pair<T1, T2> &x){
-    cin >> x.fi >> x.se;
-    return cin;
+	cin >> x.fi >> x.se;
+	return cin;
 }
 
 template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
-    cout << "(" << x.fi << "," << x.se << ")";
-    return cout;
+	cout << "(" << x.fi << "," << x.se << ")";
+	return cout;
 }
 
 template<class T> istream &operator >>(istream &cin, vt<T> &v){
-    FOR(v.size()) cin >> v[i];
-    return cin;
+	FOR(v.size()) cin >> v[i];
+	return cin;
 }
 
 template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
-    FOR(v.size()) cout << v[i] << " ";	
-    cout << '\n';
-    return cout;
+	FOR(v.size()) cout << v[i] << " ";	
+	cout << '\n';
+	return cout;
 }
 
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+const int MOD(1e9+7);
 
-    // freopen("test.inp", "r", stdin);
-    // freopen("test.out", "w", stdout);
+class Solution{
 
-    int t;
+	public:
+	int perfectSum(int a[], int n, int s){
+        vi dp(s+1);
+        dp[0]=1;
+        FOR(i, n) FOR(j, s-a[i], -1, -1) dp[j+a[i]]=(dp[j+a[i]]+dp[j])%MOD;
+        return dp[s];
+	}
+	  
+};
+
+// { Driver Code Starts.
+int main() 
+{
+   	
+   
+   	int t;
     cin >> t;
-    while(t--){
-        int n;
-        cin >> n;
-        const int N(2e5+1);
-        vi dp(N), c(N);
-        FOR(n){
-            int x;
-            cin >> x;
-            ++c[x];
-        }
-        FOR(i, 1, N){
-            dp[i]+=c[i];
-            for(int j=i*2; j<=N; j+=i) dp[j]=max(dp[j], dp[i]);
-        }
-        cout << (n-*max_element(all(dp))) << '\n';
+    while (t--)
+    {
+        int n, sum;
+
+        cin >> n >> sum;
+
+        int a[n];
+        for(int i = 0; i < n; i++)
+        	cin >> a[i];
+
+       
+
+	    Solution ob;
+	    cout << ob.perfectSum(a, n, sum) << "\n";
+	     
     }
+    return 0;
 }
+  // } Driver Code Ends

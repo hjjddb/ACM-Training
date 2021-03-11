@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace __gnu_pbds;
+
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
@@ -12,10 +13,8 @@ using namespace __gnu_pbds;
 #define ld long double
 #define ii pair<int, int>
 #define iii pair<int, ii>
-#define vc vt<char>
 #define vi vt<int>
 #define vl vt<ll>
-#define vvc vt<vc>
 #define vvi vt<vi>
 #define vvl vt<vl>
 #define vii vt<ii>
@@ -33,54 +32,50 @@ using namespace __gnu_pbds;
 #define EACH(x, a) for(auto& x: a)
 
 const int d4x[] = {-1, 0, 1, 0},
-        d4y[] = {0, -1, 0, 1},
-        d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
-        d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
-
-template<class T1, class T2> istream &operator >>(istream &cin, pair<T1, T2> &x){
-    cin >> x.fi >> x.se;
-    return cin;
-}
+          d4y[] = {0, -1, 0, 1},
+          d8x[] = {-1, -1, -1, 0, 0, 1, 1, 1},
+          d8y[] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
 template<class T1, class T2> ostream &operator <<(ostream &cout, pair<T1, T2> x){
     cout << "(" << x.fi << "," << x.se << ")";
     return cout;
 }
 
-template<class T> istream &operator >>(istream &cin, vt<T> &v){
-    FOR(v.size()) cin >> v[i];
-    return cin;
+template<class T> void read1(T &x){
+    FOR(x.size()) cin >> x[i];
 }
 
-template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
-    FOR(v.size()) cout << v[i] << " ";	
+template<class T> void read2(vt<T> &x){
+    FOR(x.size()) read1(x[i]);
+}    
+template<class T> void print1(T &x){
+    EACH(xi, x) cout << xi << ' ';
     cout << '\n';
-    return cout;
+}
+
+template<class T> void print2(vt<T> &x){
+    FOR(x.size()){
+        print1(x[i]);
+    }
 }
 
 int main(){
     ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
 
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n;
-        cin >> n;
-        const int N(2e5+1);
-        vi dp(N), c(N);
-        FOR(n){
-            int x;
-            cin >> x;
-            ++c[x];
-        }
-        FOR(i, 1, N){
-            dp[i]+=c[i];
-            for(int j=i*2; j<=N; j+=i) dp[j]=max(dp[j], dp[i]);
-        }
-        cout << (n-*max_element(all(dp))) << '\n';
+    int n, m;
+    cin >> n >> m;
+    vi a(m);
+    read1(a);
+    sort(all(a));
+    int ans(a[0]);
+    FOR(m-1){
+        int mid = (a[i]+a[i+1])/2;
+        ans = max(ans, min(mid-a[i], a[i+1]-mid));
     }
+    ans = max(ans, n-a.back()-1);
+    cout << ans;
 }

@@ -1,9 +1,31 @@
 #include<bits/stdc++.h>
-#include<ext/pb_ds/assoc_container.hpp>
-#include<ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
+
+int maximizeTheCuts(int n, int x, int y, int z);
+
+int main() {
+    
+    //taking testcases
+    int t;
+    cin >> t;
+    while(t--)
+    {
+        //taking length of line segment
+        int n;
+        cin >> n;
+        
+        //taking types of segments
+        int x,y,z;
+        cin>>x>>y>>z;
+        
+        //calling function maximizeTheCuts()
+        cout<<maximizeTheCuts(n,x,y,z)<<endl;
+
+    }
+
+	return 0;
+}// } Driver Code Ends
+
 #define ar array
 #define vt vector
 #define all(v) (v).begin(), (v).end()
@@ -58,30 +80,13 @@ template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
     return cout;
 }
 
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
-
-    freopen("test.inp", "r", stdin);
-    freopen("test.out", "w", stdout);
-
-    int t;
-    cin >> t;
-    while(t--){
-        int n, m;
-        cin >> n >> m;
-        vvl a(2, vl(n));
-        FOR(2) FOR(j, n) cin >> a[i][j];
-        vvl d(2);
-        FOR(n) d[a[1][i]-1].pb(a[0][i]);
-        FOR(2) sort(all(d[i]), greater<ll>());
-        int ans(INT_MAX);
-        cout << d[0].size();
-        // FOR(2) FOR(j, d[i].size()-1) cout << j+1<<" "; cout << '\n';//d[i][j+1]+=d[i][j];
-        // FOR(d[0].size()){
-        //     int j = lower_bound(all(d[1]), m-d[0][i])-d[1].begin();
-        //     ans = min(ans, i+2*j);
-        // }
-        // cout << (ans==INT_MAX? -1: ans) << '\n';
-    }
+//Complete this function
+int maximizeTheCuts(int n, int x, int y, int z)
+{
+    vi dp(n+1, INT_MIN);
+    int a[] = {x, y, z};
+    dp[0]=0;
+    FOR(i, 3) FOR(j, n-a[i]+1) 
+        dp[j+a[i]]=max(dp[j+a[i]], dp[j]+1);
+    return max(0, dp[n]);
 }
