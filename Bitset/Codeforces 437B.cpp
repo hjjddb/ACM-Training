@@ -54,26 +54,19 @@ template<class T> istream &operator >>(istream &cin, vt<T> &v){
     return cin;
 }
 
-ostream &operator <<(ostream &cout, vc &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
-    return cout;
-}
-
-ostream &operator <<(ostream &cout, vi &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
-    return cout;
-}
-
-ostream &operator <<(ostream &cout, vl &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
+template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
+    FOR(v.size()) cout << v[i] << " ";	
+    cout << '\n';
     return cout;
 }
 
 template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
-    FOR(v.size()) FOR(j, v[i].size()) cout << v[i][j] << " \n"[j==v[i].size()-1];
+    EACH(x, v){
+        EACH(y, x) cout << y << " ";
+        cout << '\n';
+    }
     return cout;
 }
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -81,25 +74,31 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n;
-        cin >> n;
-        vvc a(n, vc(n)), b(n, vc(n));
-        cin >> a >> b;
-        FOR(n){
-            if (a[0][i]!=b[0][i]){
-                FOR(j, n) a[j][i]=a[j][i]=='1'? '0' : '1';
-            }
-        }
-        FOR(n){
-            if (a[i][0]!=b[i][0]){
-                FOR(j, n) a[i][j]=a[i][j]=='1'? '0' : '1';
-            }
-        }
-        bool ans(1);
-        for(int i=0; i<n&&ans; ++i) for(int j=0; j<n&&ans; ++j) ans = a[i][j]==b[i][j];
-        cout << (ans? "YES" : "NO") << '\n';
+    int sum, lim;
+    cin >> sum >> lim;
+    vvi d(20, vi());
+    FOR(lim+1) FOR(j, 20) if ((1<<j)&i){
+        d[j].pb(i);
+        break;
     }
+    vi c(20);
+    bool ans(1);
+    FOR(i, 19, -1, -1){
+        if ((1<<i)&sum) c[i]++;
+        if (c[i]>d[i].size()){
+            if (!i){
+                ans=0; 
+                break;
+            }
+            c[i-1]+=((c[i]-d[i].size())<<1);
+            c[i]=d[i].size();
+        }
+    }
+    FOR(20) ans=min(ans, c[i]<=d[i].size());
+    if (ans){
+        int n(0);
+        FOR(20) n+=c[i];
+        cout << n << '\n';
+        FOR(20) FOR(j, c[i]) cout << d[i][j] << " ";
+    } else cout << -1;
 }

@@ -54,26 +54,19 @@ template<class T> istream &operator >>(istream &cin, vt<T> &v){
     return cin;
 }
 
-ostream &operator <<(ostream &cout, vc &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
-    return cout;
-}
-
-ostream &operator <<(ostream &cout, vi &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
-    return cout;
-}
-
-ostream &operator <<(ostream &cout, vl &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
+template<class T> ostream &operator <<(ostream &cout, vt<T> &v){
+    FOR(v.size()) cout << v[i] << " ";	
+    cout << '\n';
     return cout;
 }
 
 template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
-    FOR(v.size()) FOR(j, v[i].size()) cout << v[i][j] << " \n"[j==v[i].size()-1];
+    EACH(x, v){
+        EACH(y, x) cout << y << " ";
+        cout << '\n';
+    }
     return cout;
 }
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -85,21 +78,19 @@ int main(){
     cin >> t;
     while(t--){
         int n;
-        cin >> n;
-        vvc a(n, vc(n)), b(n, vc(n));
-        cin >> a >> b;
-        FOR(n){
-            if (a[0][i]!=b[0][i]){
-                FOR(j, n) a[j][i]=a[j][i]=='1'? '0' : '1';
+        vi a(4);
+        cin >> n >> a;
+        bool ans(0);
+        FOR(16){
+            bool flag(1);
+            vi b(a);
+            FOR(j, 4) if ((1<<j)&i) --b[j], --b[(j+1)%4];
+            FOR(j, 4) flag = min(flag, b[j]>=0&&b[j]<=n-2);
+            if (flag){
+                ans = 1;
+                break;
             }
         }
-        FOR(n){
-            if (a[i][0]!=b[i][0]){
-                FOR(j, n) a[i][j]=a[i][j]=='1'? '0' : '1';
-            }
-        }
-        bool ans(1);
-        for(int i=0; i<n&&ans; ++i) for(int j=0; j<n&&ans; ++j) ans = a[i][j]==b[i][j];
         cout << (ans? "YES" : "NO") << '\n';
     }
 }

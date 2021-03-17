@@ -74,6 +74,22 @@ template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
     return cout;
 }
 
+const ll MOD(1e9+7);
+const int N(1e3+1);
+ll f[N];
+
+ll powM(ll x, ll k){
+    if (!k) return 0;
+    if (k==1) return x;
+    ll half(powM(x, k>>1));
+    if (k&1) return half*half%MOD*x%MOD;
+    return half*half%MOD;
+}
+
+ll c(int n, int k){
+    return f[n]*powM(f[k]*f[n-k]%MOD, MOD-2)%MOD;
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -81,25 +97,35 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
+    f[0]=1;
+    FOR(i, 1, N) f[i]=f[i-1]*i%MOD;
     int t;
     cin >> t;
     while(t--){
-        int n;
-        cin >> n;
-        vvc a(n, vc(n)), b(n, vc(n));
-        cin >> a >> b;
+        int n, k;
+        cin >> n >> k;
+        vi a(N);
         FOR(n){
-            if (a[0][i]!=b[0][i]){
-                FOR(j, n) a[j][i]=a[j][i]=='1'? '0' : '1';
-            }
+            int x;
+            cin >> x;
+            ++a[x];
         }
-        FOR(n){
-            if (a[i][0]!=b[i][0]){
-                FOR(j, n) a[i][j]=a[i][j]=='1'? '0' : '1';
-            }
+        if (n==k){
+            cout << 1 << '\n';
+            continue;
         }
-        bool ans(1);
-        for(int i=0; i<n&&ans; ++i) for(int j=0; j<n&&ans; ++j) ans = a[i][j]==b[i][j];
-        cout << (ans? "YES" : "NO") << '\n';
+        // cout << a;
+        ll mx(0);
+        int _k(k), r(1e3);
+        while(_k&&r){
+            mx += min(_k, a[r])*r;
+            _k-=min(_k, a[r]);
+            --r;
+        }
+        r=1e3;
+        // cout << mx << " ";
+        while(mx-a[r]*r>=0&&r) mx-=a[r]*r, --r;
+        // cout << mx << " " << r << '\n';
+        cout << (r? c(a[r], mx/r) : 1) << '\n';
     }
 }

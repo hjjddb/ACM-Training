@@ -74,6 +74,7 @@ template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
     return cout;
 }
 
+const int N(1e6+1);
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -84,22 +85,20 @@ int main(){
     int t;
     cin >> t;
     while(t--){
-        int n;
-        cin >> n;
-        vvc a(n, vc(n)), b(n, vc(n));
-        cin >> a >> b;
-        FOR(n){
-            if (a[0][i]!=b[0][i]){
-                FOR(j, n) a[j][i]=a[j][i]=='1'? '0' : '1';
-            }
+        int n, m;
+        cin >> n >> m;
+        vvi a(n, vi(2));
+        FOR(2) FOR(j, n) cin >> a[j][i];
+        vvl b(2, vl(1));
+        FOR(n) b[a[i][1]-1].pb(a[i][0]);
+        FOR(2) sort(b[i].begin()+1, b[i].end(), greater<int>());
+        FOR(2) FOR(j, 1, b[i].size()) b[i][j]+=b[i][j-1];
+        int ans(INT_MAX);
+        FOR(b[0].size()){
+            int res(lower_bound(all(b[1]), m-b[0][i])-b[1].begin());
+            if (res==b[1].size()) continue;
+            ans = min(ans, i+(res<<1));
         }
-        FOR(n){
-            if (a[i][0]!=b[i][0]){
-                FOR(j, n) a[i][j]=a[i][j]=='1'? '0' : '1';
-            }
-        }
-        bool ans(1);
-        for(int i=0; i<n&&ans; ++i) for(int j=0; j<n&&ans; ++j) ans = a[i][j]==b[i][j];
-        cout << (ans? "YES" : "NO") << '\n';
+        cout << (ans==INT_MAX? -1 : ans) << '\n';
     }
 }
