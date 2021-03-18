@@ -81,23 +81,47 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n, a(0);
-        cin >> n;
-        vi c(30);
-        FOR(n){
-            int x;
-            cin >> x;
-            FOR(j, 30) c[j]+=(x>>j&1);
-            a^=x;
-        }
-        if (a){
-            FOR(i, 30, -1, -1) if (a>>i&1){
-                cout << ((c[i]%4==3&&(n-c[i])%2==0)? "LOSE" : "WIN") << '\n';
-                break;
-            }
-        } else cout << "DRAW\n";
+    int a, b, k;
+    cin >> a >> b >> k;
+    if (b==1&&k){
+        cout << "No";
+        return 0;
+    } 
+    if (!a&&k){
+        cout << "No";
+        return 0;
     }
+    if (!k){
+        cout << "Yes\n";
+        FOR(2){
+            FOR(j, b) cout << 1;
+            FOR(j, a) cout << 0;
+            cout << '\n';
+        }
+        return 0;
+    }
+    if (a+b-2<k){
+        cout << "No";
+        return 0;
+    }
+    cout << "Yes\n";
+    // x
+    FOR(b) cout << 1;
+    FOR(a) cout << 0;
+    cout << '\n';
+    // y
+    if (k<=a){
+        FOR(b-1) cout << 1;
+        FOR(k) cout << 0;
+        cout << 1;
+        FOR(a-k) cout << 0;
+    } else {
+        cout << 1;
+        FOR(b-2-k+a) cout << 1;
+        cout << 0;
+        FOR(k-a) cout << 1;
+        FOR(a-1) cout << 0;
+        cout << 1;
+    }
+
 }

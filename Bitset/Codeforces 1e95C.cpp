@@ -74,6 +74,18 @@ template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
     return cout;
 }
 
+int n, m, ans(1<<9);
+vi a, b;
+vvi c;
+
+void backtrack(int id, int x){
+    FOR(m){
+        int y(x&c[id][i]);
+        if (id==n-1) ans=min(ans, y);
+        else backtrack(id+1, y); 
+    }
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -81,23 +93,22 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    int t;
-    cin >> t;
-    while(t--){
-        int n, a(0);
-        cin >> n;
-        vi c(30);
-        FOR(n){
-            int x;
-            cin >> x;
-            FOR(j, 30) c[j]+=(x>>j&1);
-            a^=x;
+    cin >> n >> m;
+    a.resize(n), b.resize(m);
+    c.resize(n);
+    cin >> a >> b;
+    FOR(n) FOR(j, m) c[i].pb(a[i]&b[j]);
+    FOR(1<<9){
+        bool flag(1);
+        for(int j=0; j<n&&flag; ++j){
+            bool f(0);
+            for(int k=0; k<m&&!f; ++k)
+                f=((c[j][k]|i)==i);
+            flag = min(flag, f);
         }
-        if (a){
-            FOR(i, 30, -1, -1) if (a>>i&1){
-                cout << ((c[i]%4==3&&(n-c[i])%2==0)? "LOSE" : "WIN") << '\n';
-                break;
-            }
-        } else cout << "DRAW\n";
+        if (flag){
+            cout << i;
+            return 0;
+        }
     }
 }

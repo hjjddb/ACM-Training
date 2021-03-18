@@ -55,17 +55,17 @@ template<class T> istream &operator >>(istream &cin, vt<T> &v){
 }
 
 ostream &operator <<(ostream &cout, vc &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];
+    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
     return cout;
 }
 
 ostream &operator <<(ostream &cout, vi &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];
+    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
     return cout;
 }
 
 ostream &operator <<(ostream &cout, vl &v){
-    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];
+    FOR(v.size()) cout << v[i] << " \n"[i==v.size()-1];	
     return cout;
 }
 
@@ -84,20 +84,14 @@ int main(){
     int t;
     cin >> t;
     while(t--){
-        int n, a(0);
-        cin >> n;
-        vi c(30);
-        FOR(n){
-            int x;
-            cin >> x;
-            FOR(j, 30) c[j]+=(x>>j&1);
-            a^=x;
+        int u, v, z(0);
+        cin >> u >> v;
+        bool ans(u<=v);
+        for(int i=0; i<30&&ans; ++i){
+            z += (u>>i&1);
+            z -= (v>>i&1);
+            if (z<0) ans=0;
         }
-        if (a){
-            FOR(i, 30, -1, -1) if (a>>i&1){
-                cout << ((c[i]%4==3&&(n-c[i])%2==0)? "LOSE" : "WIN") << '\n';
-                break;
-            }
-        } else cout << "DRAW\n";
+        cout << (ans? "YES" : "NO") << '\n';
     }
 }
