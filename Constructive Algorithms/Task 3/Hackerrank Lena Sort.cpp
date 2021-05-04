@@ -74,43 +74,80 @@ template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
     return cout;
 }
 
-const int N = 5e2, K = 21, oo = 1e8;
-int n, m, k, dp[N][N][K], d[N][N][4];
+const int N(1e5+1);
+ll cmin[N], cmax[N];
+vi res;
+int cnt;
+
+void init(){
+    cmin[2] = cmax[2] = 1;
+    FOR(i, 3, N){
+        int m((i-1)>>1);
+        cmin[i] = i-1 + cmin[m] + cmin[i-1-m];
+        cmax[i] = i-1 + cmax[i-1];
+    }
+}
+ 
+void solve(int cost, const int &size, int _l){
+    // cout << "! " << size << " " << _l << '\n';
+    if (!size) return;
+    if (size==1){
+        res[_l]=cnt++;
+        return;
+    }
+    if (size==2){
+        res[_l]=cnt++;
+        res[_l+1]=cnt++;
+        return;
+    }
+    cost -= size-1;
+    int l(0), r(size>>1), m((l+r)>>1), id(-1);
+    while(l!=m && m!=r && id!=-1){
+        if (cmin[m]+cmin[size-1-m]<=cost && cost<=cmax[m]+cmax[size-1-m]) id=m;
+        else {
+            if (cmin[m]+cmin[size-1-m]>cost) r=m;
+            else l=m;
+            m=(l+r)>>1;
+        }
+    }
+    if (id==-1) FOR(i, l, r+1) if (cmin[i]+cmin[size-1-i]<=cost && cost<=cmax[i]+cmax[size-1-i]){
+        id=i;
+        break;
+    }
+    // cout << "? " << id << '\n';
+    int tmp = cost-cmin[id];
+    vi left, right;
+    if (tmp>cmax[size-1-id]){
+        solve(cmin[id]+tmp-cmax[size-1-id], id, _l+1);
+        res[_l]=cnt++;
+        solve(cmax[size-1-id], size-1-id, _l+id+1);
+    } else {
+        solve(cmin[id], id, _l+1);
+        res[_l]=cnt++;
+        solve(tmp, size-1-id, _l+id+1);
+    }
+}
 
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
 
-    // freopen("test.inp", "r", stdin);
-    // freopen("test.out", "w", stdout);
+    freopen("test.inp", "r", stdin);
+    freopen("test.out", "w", stdout);
 
-    cin >> n >> m >> k;
-    FOR(n) FOR(j, m) FOR(t, 1, k+1){
-        dp[i][j][t] = oo;
-    }
-    FOR(n) FOR(j, m-1){
-        int x;
-        cin >> x;
-        d[i][j][3] = x;
-        d[i][j+1][1] = x;
-    }
-    FOR(n-1) FOR(j, m){
-        int x;
-        cin >> x;
-        d[i][j][2] = x;
-        d[i+1][j][0] = x;
-    }
-    if (k&1){
-        FOR(n) FOR(j, m) cout << -1 << " \n"[j==m-1];
-        return 0;
-    }
-    k>>=1;
-    FOR(x, 1, k+1) FOR(n) FOR(j, m){
-        FOR(t, 4){
-            int ni = i+d4x[t],
-                nj = j+d4y[t];
-            if (0<=ni&&ni<n&&0<=nj&&nj<m) dp[i][j][x] = min(dp[i][j][x], dp[ni][nj][x-1]+d[i][j][t]);
+    int test; cin >> test;
+    init();
+    // FOR(10) cout << i << ": " << cmin[i] << " " << cmax[i] << '\n';
+    while(test--){
+        int n, k;
+        cin >> n >> k;
+        if (cmin[n]>k || cmax[n]<k){
+            cout << "-1\n";
+            continue;
         }
+        cnt=0;
+        res.resize(n);
+        solve(k, n, 0);
+        FOR(res.size()) cout << res[i]+1 << " \n"[i==res.size()-1];
     }
-    FOR(n) FOR(j, m) cout << 2*dp[i][j][k] << " \n"[j==m-1];
 }

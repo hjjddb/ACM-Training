@@ -74,9 +74,6 @@ template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
     return cout;
 }
 
-const int N = 5e2, K = 21, oo = 1e8;
-int n, m, k, dp[N][N][K], d[N][N][4];
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -84,33 +81,25 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    cin >> n >> m >> k;
-    FOR(n) FOR(j, m) FOR(t, 1, k+1){
-        dp[i][j][t] = oo;
-    }
-    FOR(n) FOR(j, m-1){
+    int n, k;
+    cin >> n >> k;
+    vi c(k);
+    FOR(n){
         int x;
-        cin >> x;
-        d[i][j][3] = x;
-        d[i][j+1][1] = x;
+        cin >> x, --x;
+        ++c[x];
     }
-    FOR(n-1) FOR(j, m){
-        int x;
-        cin >> x;
-        d[i][j][2] = x;
-        d[i+1][j][0] = x;
+    sort(all(c), greater<int>());
+    while (!c.back()) c.pop_back();
+    k = c.size();
+    // cout << c;
+    ll ans(LLONG_MAX);
+    FOR(i, k){
+        int r = (k-i)/2+((k-i)&1)+i;
+        int s(c[0]);
+        FOR(j, k-i-1) s = max(s, c[j+i]+c[k-1-j]);
+        // cout << s << " " << r << '\n';
+        ans = min(ans, 1LL*s*r);
     }
-    if (k&1){
-        FOR(n) FOR(j, m) cout << -1 << " \n"[j==m-1];
-        return 0;
-    }
-    k>>=1;
-    FOR(x, 1, k+1) FOR(n) FOR(j, m){
-        FOR(t, 4){
-            int ni = i+d4x[t],
-                nj = j+d4y[t];
-            if (0<=ni&&ni<n&&0<=nj&&nj<m) dp[i][j][x] = min(dp[i][j][x], dp[ni][nj][x-1]+d[i][j][t]);
-        }
-    }
-    FOR(n) FOR(j, m) cout << 2*dp[i][j][k] << " \n"[j==m-1];
+    cout << ans;
 }

@@ -74,9 +74,6 @@ template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
     return cout;
 }
 
-const int N = 5e2, K = 21, oo = 1e8;
-int n, m, k, dp[N][N][K], d[N][N][4];
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -84,33 +81,20 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    cin >> n >> m >> k;
-    FOR(n) FOR(j, m) FOR(t, 1, k+1){
-        dp[i][j][t] = oo;
-    }
-    FOR(n) FOR(j, m-1){
-        int x;
-        cin >> x;
-        d[i][j][3] = x;
-        d[i][j+1][1] = x;
-    }
-    FOR(n-1) FOR(j, m){
-        int x;
-        cin >> x;
-        d[i][j][2] = x;
-        d[i+1][j][0] = x;
-    }
-    if (k&1){
-        FOR(n) FOR(j, m) cout << -1 << " \n"[j==m-1];
-        return 0;
-    }
-    k>>=1;
-    FOR(x, 1, k+1) FOR(n) FOR(j, m){
-        FOR(t, 4){
-            int ni = i+d4x[t],
-                nj = j+d4y[t];
-            if (0<=ni&&ni<n&&0<=nj&&nj<m) dp[i][j][x] = min(dp[i][j][x], dp[ni][nj][x-1]+d[i][j][t]);
+    int test; cin >> test;
+    while(test--){
+        int n;
+        cin >> n;
+        vvi a(n, vi(2));
+        FOR(n){
+            cin >> a[i][0], a[i][1]=i;
+            if (i) a[i]=max(a[i], a[i-1]);
         }
+        int c(0), r(n-1);
+        while(r>=0){
+            r = a[r][1]-1;
+            ++c;
+        }
+        cout << (c&1? "BOB" : "ANDY") << '\n';
     }
-    FOR(n) FOR(j, m) cout << 2*dp[i][j][k] << " \n"[j==m-1];
 }

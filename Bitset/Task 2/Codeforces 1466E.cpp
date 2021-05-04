@@ -74,9 +74,6 @@ template<class T> ostream &operator <<(ostream &cout, const vt<vt<T>> &v){
     return cout;
 }
 
-const int N = 5e2, K = 21, oo = 1e8;
-int n, m, k, dp[N][N][K], d[N][N][4];
-
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
@@ -84,33 +81,25 @@ int main(){
     // freopen("test.inp", "r", stdin);
     // freopen("test.out", "w", stdout);
 
-    cin >> n >> m >> k;
-    FOR(n) FOR(j, m) FOR(t, 1, k+1){
-        dp[i][j][t] = oo;
-    }
-    FOR(n) FOR(j, m-1){
-        int x;
-        cin >> x;
-        d[i][j][3] = x;
-        d[i][j+1][1] = x;
-    }
-    FOR(n-1) FOR(j, m){
-        int x;
-        cin >> x;
-        d[i][j][2] = x;
-        d[i+1][j][0] = x;
-    }
-    if (k&1){
-        FOR(n) FOR(j, m) cout << -1 << " \n"[j==m-1];
-        return 0;
-    }
-    k>>=1;
-    FOR(x, 1, k+1) FOR(n) FOR(j, m){
-        FOR(t, 4){
-            int ni = i+d4x[t],
-                nj = j+d4y[t];
-            if (0<=ni&&ni<n&&0<=nj&&nj<m) dp[i][j][x] = min(dp[i][j][x], dp[ni][nj][x-1]+d[i][j][t]);
+    const int MOD(1e9+7);
+    vl p(60);
+    p[0]=1;
+    FOR(i, 1, 60) p[i]=(p[i-1]<<1)%MOD;
+    int test; cin >> test;
+    while(test--){
+        int n; cin >> n;
+        vl a(n); cin >> a;
+        vi c(60);
+        FOR(n) FOR(j, 60) c[j] += (a[i]>>j&1);
+        ll sum(0);
+        FOR(n){
+            ll sum_or(0), sum_and(0);
+            FOR(j, 60){
+                sum_or = (a[i]>>j&1) ? (sum_or+p[j]*n%MOD)%MOD : (sum_or+p[j]*c[j]%MOD)%MOD;
+                sum_and = (sum_and+(a[i]>>j&1)*p[j]*c[j]%MOD)%MOD;
+            }
+            sum = (sum+(sum_or*sum_and)%MOD)%MOD;
         }
+        cout << sum << '\n';
     }
-    FOR(n) FOR(j, m) cout << 2*dp[i][j][k] << " \n"[j==m-1];
 }
